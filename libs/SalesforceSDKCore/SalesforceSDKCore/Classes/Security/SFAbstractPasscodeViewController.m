@@ -117,13 +117,14 @@ static  NSString * cachedPasscode;
     return cachedPasscode != nil && [context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:nil];
 }
 
-- (void) showTouchId
+- (void) showTouchIdWithCompletionBlock:(void (^)(void))completionBlock;
 {
     if ([self canShowTouchId]) {
         LAContext *context = [[LAContext alloc] init];
         [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason:[SFSDKResourceUtils localizedString:@"touchIdReason"] reply:^(BOOL success, NSError *authenticationError){
             if (success &&[[SFPasscodeManager sharedManager] verifyPasscode:cachedPasscode]) {
                     [self validatePasscodeConfirmed:cachedPasscode];
+                completionBlock();
             }
         }];
     }

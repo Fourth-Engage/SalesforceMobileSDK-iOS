@@ -111,7 +111,7 @@ extern const NSUInteger kMaxNumberofAttempts;
  * If successful, the app will be unlocked
  * Will do nothing if touch id is supported on the device or the passcode has never been entered manually since app was launched
  */
-- (void) showTouchId;
+- (void) showTouchIdWithCompletionBlock:(void (^)(void))completionBlock;
 
 @end
 
