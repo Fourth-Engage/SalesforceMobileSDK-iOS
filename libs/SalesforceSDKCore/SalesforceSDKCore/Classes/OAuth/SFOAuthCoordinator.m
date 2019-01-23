@@ -1010,8 +1010,8 @@ static NSString * const kSFECParameter = @"ec";
     if ([self hasToLoadErrorPage:requestUrl]) {
         NSURL *errorURL = [NSBundle.mainBundle URLForResource:@"error" withExtension:@"html" subdirectory:@"www"];
         NSURLRequest *errorRequest = [[NSURLRequest alloc] initWithURL:errorURL];
-        [webView loadRequest:errorRequest];
         decisionHandler(WKNavigationActionPolicyCancel);
+        [webView loadRequest:errorRequest];
     } else if ([self isRedirectURL:requestUrl]) {
         [self handleUserAgentResponse:url];
         decisionHandler(WKNavigationActionPolicyCancel);
