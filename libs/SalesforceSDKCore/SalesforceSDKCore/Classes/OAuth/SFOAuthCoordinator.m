@@ -43,6 +43,7 @@
 #import "SFNetwork.h"
 #import "NSURL+SFAdditions.h"
 #import <SalesforceAnalytics/NSUserDefaults+SFAdditions.h>
+#import <SalesforceAnalytics/SFSDKReachability.h>
 
 // Public constants
 
@@ -1005,13 +1006,19 @@ static NSString * const kSFECParameter = @"ec";
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     NSURL *url = navigationAction.request.URL;
     NSString *requestUrl = [url absoluteString];
-    if ([self isRedirectURL:requestUrl]) {
+    
+    if ([self hasToLoadErrorPage:requestUrl]) {
+        NSURL *errorURL = [NSBundle.mainBundle URLForResource:@"error" withExtension:@"html" subdirectory:@"www"];
+        NSURLRequest *errorRequest = [[NSURLRequest alloc] initWithURL:errorURL];
+        [webView loadRequest:errorRequest];
+        decisionHandler(WKNavigationActionPolicyCancel);
+    } else if ([self isRedirectURL:requestUrl]) {
         [self handleUserAgentResponse:url];
         decisionHandler(WKNavigationActionPolicyCancel);
-    } else if ([self isSPAppRedirectURL:requestUrl]){
+    } else if ([self isSPAppRedirectURL:requestUrl]) {
         [self handleIDPAuthCodeResponse:url];
         decisionHandler(WKNavigationActionPolicyCancel);
-    }else {
+    } else {
         decisionHandler(WKNavigationActionPolicyAllow);
     }
 }
@@ -1046,6 +1053,27 @@ static NSString * const kSFECParameter = @"ec";
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error {
     [self sfwebView:webView didFailLoadWithError:error];
+}
+
+- (NSString *) getConnectionType {
+    SFSDKReachability *reachability = [SFSDKReachability reachabilityForInternetConnection];
+    [reachability startNotifier];
+    SFSDKReachabilityNetworkStatus networkStatus = [reachability currentReachabilityStatus];
+    switch (networkStatus) {
+        case SFSDKReachabilityNotReachable:
+            return @"None";
+        case SFSDKReachabilityReachableViaWWAN:
+            return @"Cellular";
+        case SFSDKReachabilityReachableViaWiFi:
+            return @"WiFi";
+        default:
+            return @"Unknown";
+    }
+}
+
+- (BOOL) hasToLoadErrorPage:(NSString *) requestUrlString
+{
+    return self.getConnectionType == SFSDKReachabilityNotReachable && ![requestUrlString hasSuffix:@"error.html"]
 }
 
 - (BOOL) isRedirectURL:(NSString *) requestUrlString
