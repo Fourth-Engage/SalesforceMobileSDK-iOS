@@ -1073,7 +1073,7 @@ static NSString * const kSFECParameter = @"ec";
 
 - (BOOL) hasToLoadErrorPage:(NSString *) requestUrlString
 {
-    return self.getConnectionType == SFSDKReachabilityNotReachable && ![requestUrlString hasSuffix:@"error.html"]
+    return self.getConnectionType == SFSDKReachabilityNotReachable && ![requestUrlString hasSuffix:@"error.html"];
 }
 
 - (BOOL) isRedirectURL:(NSString *) requestUrlString
