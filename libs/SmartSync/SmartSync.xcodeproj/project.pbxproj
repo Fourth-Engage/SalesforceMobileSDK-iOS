@@ -1330,7 +1330,7 @@
 			};
 			name = Prelive;
 		};
-		22B5A16B21F9B9990087A46B /* Debug Release */ = {
+		22B5A18C21F9C4DE0087A46B /* Debug Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1355,18 +1355,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1374,21 +1367,22 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = "Debug Release";
 		};
-		22B5A16C21F9B9990087A46B /* Debug Release */ = {
+		22B5A18D21F9C4DE0087A46B /* Debug Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CECB662A1C1BB8A9008038AE /* SmartSync-Dynamic-iOS-Debug.xcconfig */;
+			baseConfigurationReference = CECB662B1C1BB8A9008038AE /* SmartSync-Dynamic-iOS-Release.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				BUILD_VERSION_SUFFIX = "";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1399,7 +1393,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_ENABLE_DEBUG_INFO = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.salesforce.mobilesdk.SmartSync;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1409,7 +1403,7 @@
 			};
 			name = "Debug Release";
 		};
-		22B5A16D21F9B9990087A46B /* Debug Release */ = {
+		22B5A18E21F9C4DE0087A46B /* Debug Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
@@ -1417,30 +1411,27 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_ENTITLEMENTS = SmartSyncTestApp/SmartSyncTestApp.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = SmartSyncTestApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MTL_ENABLE_DEBUG_INFO = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.salesforce.SmartSyncTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Debug Release";
 		};
-		22B5A16E21F9B9990087A46B /* Debug Release */ = {
+		22B5A18F21F9C4DE0087A46B /* Debug Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE8F13011AD4A84C00233F2F /* SmartSync-Test.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SmartSync/SmartSync-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
 				INFOPLIST_FILE = "SmartSyncTests/SmartSyncTests-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1456,24 +1447,25 @@
 			};
 			name = "Debug Release";
 		};
-		22B5A16F21F9B9990087A46B /* Debug Release */ = {
+		22B5A19021F9C4DE0087A46B /* Debug Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = "Debug Release";
 		};
-		22B5A17021F9B9990087A46B /* Debug Release */ = {
+		22B5A19121F9C4DE0087A46B /* Debug Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CE8F12FF1AD4A84C00233F2F /* SmartSync-Static-iOS-Debug.xcconfig */;
+			baseConfigurationReference = CE8F13001AD4A84C00233F2F /* SmartSync-Static-iOS-Release.xcconfig */;
 			buildSettings = {
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lxml2",
@@ -2406,11 +2398,11 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4F06AF421C499FD100F70798 /* Debug */,
-				22B5A16D21F9B9990087A46B /* Debug Release */,
 				6E68B6E820D140CF00A4CDA5 /* Dashboard */,
 				22CACC3B21414EB600F72329 /* Vstream */,
 				6E6E56F020C996EF0058D1EB /* Perfdev */,
 				4F06AF431C499FD100F70798 /* Release */,
+				22B5A18E21F9C4DE0087A46B /* Debug Release */,
 				2216BE7F21E3791F00BE02D9 /* Prelive */,
 				4B2D1B31215BE7EF00903B15 /* UAT */,
 			);
@@ -2421,11 +2413,11 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CE4CE2CE1C0E463C009F6029 /* Debug */,
-				22B5A16C21F9B9990087A46B /* Debug Release */,
 				6E68B6E720D140CF00A4CDA5 /* Dashboard */,
 				22CACC3A21414EB600F72329 /* Vstream */,
 				6E6E56EF20C996EF0058D1EB /* Perfdev */,
 				CE4CE2CF1C0E463C009F6029 /* Release */,
+				22B5A18D21F9C4DE0087A46B /* Debug Release */,
 				2216BE7E21E3791F00BE02D9 /* Prelive */,
 				4B2D1B30215BE7EF00903B15 /* UAT */,
 			);
@@ -2436,11 +2428,11 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CEA883F41C19160E008D871B /* Debug */,
-				22B5A17021F9B9990087A46B /* Debug Release */,
 				6E68B6EB20D140CF00A4CDA5 /* Dashboard */,
 				22CACC3E21414EB600F72329 /* Vstream */,
 				6E6E56F320C996EF0058D1EB /* Perfdev */,
 				CEA883F51C19160E008D871B /* Release */,
+				22B5A19121F9C4DE0087A46B /* Debug Release */,
 				2216BE8221E3791F00BE02D9 /* Prelive */,
 				4B2D1B34215BE7EF00903B15 /* UAT */,
 			);
@@ -2451,11 +2443,11 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CEAAAE66195911E600CBBFE9 /* Debug */,
-				22B5A16B21F9B9990087A46B /* Debug Release */,
 				6E68B6E620D140CF00A4CDA5 /* Dashboard */,
 				22CACC3921414EB600F72329 /* Vstream */,
 				6E6E56EE20C996EF0058D1EB /* Perfdev */,
 				CEAAAE67195911E600CBBFE9 /* Release */,
+				22B5A18C21F9C4DE0087A46B /* Debug Release */,
 				2216BE7D21E3791F00BE02D9 /* Prelive */,
 				4B2D1B2F215BE7EF00903B15 /* UAT */,
 			);
@@ -2466,11 +2458,11 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CEAAAE6C195911E600CBBFE9 /* Debug */,
-				22B5A16E21F9B9990087A46B /* Debug Release */,
 				6E68B6E920D140CF00A4CDA5 /* Dashboard */,
 				22CACC3C21414EB600F72329 /* Vstream */,
 				6E6E56F120C996EF0058D1EB /* Perfdev */,
 				CEAAAE6D195911E600CBBFE9 /* Release */,
+				22B5A18F21F9C4DE0087A46B /* Debug Release */,
 				2216BE8021E3791F00BE02D9 /* Prelive */,
 				4B2D1B32215BE7EF00903B15 /* UAT */,
 			);
@@ -2481,11 +2473,11 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CEAAAE77195A181000CBBFE9 /* Debug */,
-				22B5A16F21F9B9990087A46B /* Debug Release */,
 				6E68B6EA20D140CF00A4CDA5 /* Dashboard */,
 				22CACC3D21414EB600F72329 /* Vstream */,
 				6E6E56F220C996EF0058D1EB /* Perfdev */,
 				CEAAAE78195A181000CBBFE9 /* Release */,
+				22B5A19021F9C4DE0087A46B /* Debug Release */,
 				2216BE8121E3791F00BE02D9 /* Prelive */,
 				4B2D1B33215BE7EF00903B15 /* UAT */,
 			);
