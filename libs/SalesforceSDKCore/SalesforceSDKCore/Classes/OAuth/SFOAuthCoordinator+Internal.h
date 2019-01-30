@@ -60,6 +60,7 @@ typedef NS_ENUM(NSUInteger, SFOAuthTokenEndpointFlow) {
 @property (nonatomic, readwrite) SFOAuthAdvancedAuthState advancedAuthState;
 @property (nonatomic, copy) NSString *origWebUserAgent;
 @property (nonatomic, strong) SFOAuthCredentials *spAppCredentials;
+@property (nonatomic, strong) UIView *loadingView;
 /** UpdateCredentials and record changes to instanceUrl,accessToken,communityId
   @param params NV pairs received from token endpoint.
  */

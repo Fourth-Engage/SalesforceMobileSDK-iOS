@@ -43,7 +43,6 @@
 #import "SFNetwork.h"
 #import "NSURL+SFAdditions.h"
 #import <SalesforceAnalytics/NSUserDefaults+SFAdditions.h>
-#import <SalesforceAnalytics/SFSDKReachability.h>
 
 // Public constants
 
@@ -131,6 +130,7 @@ static NSString * const kSFECParameter = @"ec";
 @synthesize delegate             = _delegate;
 @synthesize timeout              = _timeout;
 @synthesize view                 = _view;
+@synthesize loadingView                 = _loadingView;
 
 // private
 
@@ -365,6 +365,12 @@ static NSString * const kSFECParameter = @"ec";
     return _view;
 }
 
+- (UIView *)loadingView {
+    if (_loadingView == nil) {
+        _loadingView = [[[NSBundle mainBundle] loadNibNamed:@"LoadingView" owner:self options:nil] firstObject];
+    }
+    return _loadingView;
+}
 
 #pragma mark - Private Methods
 
@@ -1007,12 +1013,7 @@ static NSString * const kSFECParameter = @"ec";
     NSURL *url = navigationAction.request.URL;
     NSString *requestUrl = [url absoluteString];
     
-    if ([self hasToLoadErrorPage:requestUrl]) {
-        NSURL *errorURL = [NSBundle.mainBundle URLForResource:@"error" withExtension:@"html" subdirectory:@"www"];
-        NSURLRequest *errorRequest = [[NSURLRequest alloc] initWithURL:errorURL];
-        decisionHandler(WKNavigationActionPolicyCancel);
-        [webView loadRequest:errorRequest];
-    } else if ([self isRedirectURL:requestUrl]) {
+    if ([self isRedirectURL:requestUrl]) {
         [self handleUserAgentResponse:url];
         decisionHandler(WKNavigationActionPolicyCancel);
     } else if ([self isSPAppRedirectURL:requestUrl]) {
@@ -1029,14 +1030,21 @@ static NSString * const kSFECParameter = @"ec";
 
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
     NSURL *url = [webView URL];
+    
     [SFSDKCoreLogger i:[self class] format:@"%@ host=%@ : path=%@", NSStringFromSelector(_cmd), url.host, url.path];
+    
     if ([self.delegate respondsToSelector:@selector(oauthCoordinator:didStartLoad:)]) {
         [self.delegate oauthCoordinator:self didStartLoad:webView];
     }
+    
+    self.loadingView.frame = self.view.bounds;
+    self.loadingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.view addSubview:self.loadingView];
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
     [self sfwebView:webView didFailLoadWithError:error];
+    [self.loadingView removeFromSuperview];
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
@@ -1049,22 +1057,13 @@ static NSString * const kSFECParameter = @"ec";
         [self.delegate oauthCoordinator:self didBeginAuthenticationWithView:self.view];
         NSAssert((nil != [self.view superview]), @"No superview for oauth web view after didBeginAuthenticationWithView");
     }
+    
+    [self.loadingView removeFromSuperview];
 }
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error {
     [self sfwebView:webView didFailLoadWithError:error];
-}
-
-- (SFSDKReachabilityNetworkStatus) getConnectionType {
-    SFSDKReachability *reachability = [SFSDKReachability reachabilityForInternetConnection];
-    [reachability startNotifier];
-    SFSDKReachabilityNetworkStatus networkStatus = [reachability currentReachabilityStatus];
-    return networkStatus;
-}
-
-- (BOOL) hasToLoadErrorPage:(NSString *) requestUrlString
-{
-    return self.getConnectionType == SFSDKReachabilityNotReachable && ![requestUrlString hasSuffix:@"error.html"];
+    [self.loadingView removeFromSuperview];
 }
 
 - (BOOL) isRedirectURL:(NSString *) requestUrlString
