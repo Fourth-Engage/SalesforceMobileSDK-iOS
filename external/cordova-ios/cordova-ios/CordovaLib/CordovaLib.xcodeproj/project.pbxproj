@@ -87,6 +87,9 @@
 		C0C01ECE1E39131A0056E6CB /* NSDictionary+CordovaPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 7ED95D311AB9029B008C4574 /* NSDictionary+CordovaPreferences.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C0C01ECF1E39131A0056E6CB /* NSMutableArray+QueueAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 7ED95D331AB9029B008C4574 /* NSMutableArray+QueueAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C0C01ED01E3913610056E6CB /* CDVUIWebViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7ED95CFE1AB9028C008C4574 /* CDVUIWebViewDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C9CE268222033B8F00E11130 /* CDVLoadingViewService.h in Headers */ = {isa = PBXBuildFile; fileRef = C9CE268022033B8E00E11130 /* CDVLoadingViewService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C9CE268322033B8F00E11130 /* CDVLoadingViewService.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CE268122033B8F00E11130 /* CDVLoadingViewService.m */; };
+		C9CE268522033C4B00E11130 /* CDVLoadingViewService.h in Headers */ = {isa = PBXBuildFile; fileRef = C9CE268022033B8E00E11130 /* CDVLoadingViewService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -162,6 +165,9 @@
 		C0C01EB21E3911D50056E6CB /* Cordova.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Cordova.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0C01EB41E3911D50056E6CB /* Cordova.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Cordova.h; sourceTree = "<group>"; };
 		C0C01EB51E3911D50056E6CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C9CE267E22033B2700E11130 /* SalesforceHybridSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SalesforceHybridSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9CE268022033B8E00E11130 /* CDVLoadingViewService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDVLoadingViewService.h; sourceTree = "<group>"; };
+		C9CE268122033B8F00E11130 /* CDVLoadingViewService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDVLoadingViewService.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +206,7 @@
 				C0C01EB31E3911D50056E6CB /* Cordova */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				30325A0B136B343700982B63 /* VERSION */,
+				C9CE267D22033B2700E11130 /* Frameworks */,
 			);
 			name = CordovaLib;
 			sourceTree = "<group>";
@@ -310,6 +317,8 @@
 				7ED95D271AB9029B008C4574 /* CDVURLProtocol.m */,
 				7ED95D281AB9029B008C4574 /* CDVUserAgentUtil.h */,
 				7ED95D291AB9029B008C4574 /* CDVUserAgentUtil.m */,
+				C9CE268022033B8E00E11130 /* CDVLoadingViewService.h */,
+				C9CE268122033B8F00E11130 /* CDVLoadingViewService.m */,
 				7ED95D2A1AB9029B008C4574 /* CDVViewController.h */,
 				7ED95D2B1AB9029B008C4574 /* CDVViewController.m */,
 				7ED95D2C1AB9029B008C4574 /* CDVWebViewEngineProtocol.h */,
@@ -342,6 +351,14 @@
 			path = Cordova;
 			sourceTree = "<group>";
 		};
+		C9CE267D22033B2700E11130 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C9CE267E22033B2700E11130 /* SalesforceHybridSDK.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -361,6 +378,7 @@
 				C0C01EBE1E39131A0056E6CB /* CDVAvailabilityDeprecated.h in Headers */,
 				C0C01EC91E39131A0056E6CB /* CDVURLProtocol.h in Headers */,
 				C0C01EBF1E39131A0056E6CB /* CDVCommandDelegate.h in Headers */,
+				C9CE268222033B8F00E11130 /* CDVLoadingViewService.h in Headers */,
 				C0C01ECD1E39131A0056E6CB /* CDVWhitelist.h in Headers */,
 				C0C01ED01E3913610056E6CB /* CDVUIWebViewDelegate.h in Headers */,
 				C0C01ECA1E39131A0056E6CB /* CDVUserAgentUtil.h in Headers */,
@@ -406,6 +424,7 @@
 				7ED95D021AB9028C008C4574 /* CDVDebug.h in Headers */,
 				7ED95D051AB9028C008C4574 /* CDVPlugin+Private.h in Headers */,
 				7E7F69B61ABA35D8007546F4 /* CDVLocalStorage.h in Headers */,
+				C9CE268522033C4B00E11130 /* CDVLoadingViewService.h in Headers */,
 				3093E2231B16D6A3003F381A /* CDVIntentAndNavigationFilter.h in Headers */,
 				7E7F69B81ABA368F007546F4 /* CDVUIWebViewEngine.h in Headers */,
 				7E7F69B91ABA3692007546F4 /* CDVHandleOpenURL.h in Headers */,
@@ -504,6 +523,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9CE268322033B8F00E11130 /* CDVLoadingViewService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
