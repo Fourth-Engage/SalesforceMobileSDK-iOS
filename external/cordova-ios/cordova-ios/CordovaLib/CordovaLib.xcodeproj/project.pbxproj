@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2260F3E22204B02B0008EEF3 /* CDVLoadingViewService.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CE268122033B8F00E11130 /* CDVLoadingViewService.m */; };
 		28BFF9141F355A4E00DDF01A /* CDVLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 28BFF9121F355A4E00DDF01A /* CDVLogger.h */; };
 		28BFF9151F355A4E00DDF01A /* CDVLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BFF9131F355A4E00DDF01A /* CDVLogger.m */; };
 		30193A501AE6350A0069A75F /* CDVUIWebViewNavigationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30193A4E1AE6350A0069A75F /* CDVUIWebViewNavigationDelegate.m */; };
@@ -353,7 +354,6 @@
 		C9CE267D22033B2700E11130 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C9CE267E22033B2700E11130 /* SalesforceHybridSDK.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -396,6 +396,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9CE268522033C4B00E11130 /* CDVLoadingViewService.h in Headers */,
 				7ED95D521AB9029B008C4574 /* CDVWebViewEngineProtocol.h in Headers */,
 				7ED95D491AB9029B008C4574 /* CDVScreenOrientationDelegate.h in Headers */,
 				7ED95D351AB9029B008C4574 /* CDV.h in Headers */,
@@ -423,7 +424,6 @@
 				7ED95D021AB9028C008C4574 /* CDVDebug.h in Headers */,
 				7ED95D051AB9028C008C4574 /* CDVPlugin+Private.h in Headers */,
 				7E7F69B61ABA35D8007546F4 /* CDVLocalStorage.h in Headers */,
-				C9CE268522033C4B00E11130 /* CDVLoadingViewService.h in Headers */,
 				3093E2231B16D6A3003F381A /* CDVIntentAndNavigationFilter.h in Headers */,
 				7E7F69B81ABA368F007546F4 /* CDVUIWebViewEngine.h in Headers */,
 				7E7F69B91ABA3692007546F4 /* CDVHandleOpenURL.h in Headers */,
@@ -530,6 +530,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2260F3E22204B02B0008EEF3 /* CDVLoadingViewService.m in Sources */,
 				7ED95D511AB9029B008C4574 /* CDVViewController.m in Sources */,
 				7ED95D581AB9029B008C4574 /* NSDictionary+CordovaPreferences.m in Sources */,
 				7ED95D371AB9029B008C4574 /* CDVAppDelegate.m in Sources */,
