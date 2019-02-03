@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2260F3E22204B02B0008EEF3 /* CDVLoadingViewService.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CE268122033B8F00E11130 /* CDVLoadingViewService.m */; };
+		2260F4E92204B9840008EEF3 /* CDVLoadingViewService.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CE268122033B8F00E11130 /* CDVLoadingViewService.m */; };
+		2260F52E2204BB440008EEF3 /* CDVLoadingViewService.h in Headers */ = {isa = PBXBuildFile; fileRef = C9CE268022033B8E00E11130 /* CDVLoadingViewService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2260F52F2204BB4C0008EEF3 /* CDVLoadingViewService.h in Headers */ = {isa = PBXBuildFile; fileRef = C9CE268022033B8E00E11130 /* CDVLoadingViewService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		28BFF9141F355A4E00DDF01A /* CDVLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 28BFF9121F355A4E00DDF01A /* CDVLogger.h */; };
 		28BFF9151F355A4E00DDF01A /* CDVLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BFF9131F355A4E00DDF01A /* CDVLogger.m */; };
 		30193A501AE6350A0069A75F /* CDVUIWebViewNavigationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30193A4E1AE6350A0069A75F /* CDVUIWebViewNavigationDelegate.m */; };
@@ -88,9 +90,6 @@
 		C0C01ECE1E39131A0056E6CB /* NSDictionary+CordovaPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 7ED95D311AB9029B008C4574 /* NSDictionary+CordovaPreferences.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C0C01ECF1E39131A0056E6CB /* NSMutableArray+QueueAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 7ED95D331AB9029B008C4574 /* NSMutableArray+QueueAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C0C01ED01E3913610056E6CB /* CDVUIWebViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7ED95CFE1AB9028C008C4574 /* CDVUIWebViewDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C9CE268222033B8F00E11130 /* CDVLoadingViewService.h in Headers */ = {isa = PBXBuildFile; fileRef = C9CE268022033B8E00E11130 /* CDVLoadingViewService.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C9CE268322033B8F00E11130 /* CDVLoadingViewService.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CE268122033B8F00E11130 /* CDVLoadingViewService.m */; };
-		C9CE268522033C4B00E11130 /* CDVLoadingViewService.h in Headers */ = {isa = PBXBuildFile; fileRef = C9CE268022033B8E00E11130 /* CDVLoadingViewService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -365,6 +364,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2260F52F2204BB4C0008EEF3 /* CDVLoadingViewService.h in Headers */,
 				C0C01EC11E39131A0056E6CB /* CDVCommandQueue.h in Headers */,
 				C0C01EC51E39131A0056E6CB /* CDVPlugin.h in Headers */,
 				C0C01ECF1E39131A0056E6CB /* NSMutableArray+QueueAdditions.h in Headers */,
@@ -377,7 +377,6 @@
 				C0C01EBE1E39131A0056E6CB /* CDVAvailabilityDeprecated.h in Headers */,
 				C0C01EC91E39131A0056E6CB /* CDVURLProtocol.h in Headers */,
 				C0C01EBF1E39131A0056E6CB /* CDVCommandDelegate.h in Headers */,
-				C9CE268222033B8F00E11130 /* CDVLoadingViewService.h in Headers */,
 				C0C01ECD1E39131A0056E6CB /* CDVWhitelist.h in Headers */,
 				C0C01ED01E3913610056E6CB /* CDVUIWebViewDelegate.h in Headers */,
 				C0C01ECA1E39131A0056E6CB /* CDVUserAgentUtil.h in Headers */,
@@ -396,7 +395,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9CE268522033C4B00E11130 /* CDVLoadingViewService.h in Headers */,
+				2260F52E2204BB440008EEF3 /* CDVLoadingViewService.h in Headers */,
 				7ED95D521AB9029B008C4574 /* CDVWebViewEngineProtocol.h in Headers */,
 				7ED95D491AB9029B008C4574 /* CDVScreenOrientationDelegate.h in Headers */,
 				7ED95D351AB9029B008C4574 /* CDV.h in Headers */,
@@ -522,7 +521,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9CE268322033B8F00E11130 /* CDVLoadingViewService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -530,7 +528,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2260F3E22204B02B0008EEF3 /* CDVLoadingViewService.m in Sources */,
+				2260F4E92204B9840008EEF3 /* CDVLoadingViewService.m in Sources */,
 				7ED95D511AB9029B008C4574 /* CDVViewController.m in Sources */,
 				7ED95D581AB9029B008C4574 /* NSDictionary+CordovaPreferences.m in Sources */,
 				7ED95D371AB9029B008C4574 /* CDVAppDelegate.m in Sources */,
