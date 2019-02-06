@@ -41,6 +41,7 @@
 #import <Cordova/NSDictionary+CordovaPreferences.h>
 #import <Cordova/CDVUserAgentUtil.h>
 #import <objc/message.h>
+#import <SalesforceAnalytics/SFSDKReachability.h>
 
 // Public constants.
 NSString * const kAppHomeUrlPropKey = @"AppHomeUrl";
@@ -355,10 +356,17 @@ SFSDK_USE_DEPRECATED_BEGIN
     NSString *errorPage = _hybridViewConfig.errorPage;
     NSURL *errorPageUrl = [self fullFileUrlForPage:errorPage];
     if (self.useUIWebView) {
-        self.errorPageUIWebView = [[UIWebView alloc] initWithFrame:self.view.frame];
-        self.errorPageUIWebView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        self.errorPageUIWebView.delegate = self;
-        [self.view addSubview:self.errorPageUIWebView];
+        SFSDKReachability *reach = [SFSDKReachability reachabilityForInternetConnection];
+        [reach startNotifier];
+        
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(connectionChanged:) name:kSFSDKReachabilityChangedNotification object:nil];
+        
+        NSError *error = [NSError errorWithDomain:errorContext code:errorCode userInfo:nil];
+        [SalesforceSDKManager.sharedManager sendLaunchError:error];
+//        self.errorPageUIWebView = [[UIWebView alloc] initWithFrame:self.view.frame];
+//        self.errorPageUIWebView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+//        self.errorPageUIWebView.delegate = self;
+//        [self.view addSubview:self.errorPageUIWebView];
     } else {
         WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
         config.processPool = SFSDKWebViewStateManager.sharedProcessPool;
@@ -892,6 +900,29 @@ SFSDK_USE_DEPRECATED_BEGIN
         [[SFAuthenticationManager sharedManager] logout];
     } else {
         [[SFUserAccountManager sharedInstance] logout];
+    }
+}
+
+- (void)connectionChanged:(NSNotification *)notification {
+    SFSDKReachability *reach = notification.object;
+    
+    if (reach.currentReachabilityStatus == SFSDKReachabilityNotReachable) {
+        return;
+    }
+    
+    // Clear.
+    [reach stopNotifier];
+    [NSNotificationCenter.defaultCenter removeObserver:self name:kSFSDKReachabilityChangedNotification object:nil];
+    
+    // Reload.
+    [SalesforceSDKManager.sharedManager sendPostLaunch];
+    
+    NSURLRequest *newRequest = [NSURLRequest requestWithURL:self.appHomeUrl];
+    
+    if (self.useUIWebView) {
+        [(UIWebView *)(self.webView) loadRequest:newRequest];
+    } else {
+        [(WKWebView *)(self.webView) loadRequest:newRequest];
     }
 }
 

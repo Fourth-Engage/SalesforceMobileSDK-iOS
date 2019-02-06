@@ -277,6 +277,7 @@ typedef void (^SFSnapshotViewControllerDismissalBlock)(UIViewController* snapsho
 
 - (void)authValidatedToPostAuth:(SFSDKLaunchAction)launchAction;
 - (void)sendLaunchError:(NSError *)theLaunchError;
+- (void)sendPostLaunch;
 
 /**
  @return app type as a string
