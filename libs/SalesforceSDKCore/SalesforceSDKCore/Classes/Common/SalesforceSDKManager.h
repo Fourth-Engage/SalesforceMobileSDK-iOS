@@ -185,6 +185,8 @@ typedef void (^SFSnapshotViewControllerDismissalBlock)(UIViewController* snapsho
  */
 @property (nonatomic, copy, nullable) SFSDKSwitchUserCallbackBlock switchUserAction;
 
+@property (nonatomic, copy, nullable) SFSDKHideLoadingCallbackBlock hideLoadingAction;
+
 /**
  The block to execute after the app has entered the foreground.
  */
@@ -278,6 +280,7 @@ typedef void (^SFSnapshotViewControllerDismissalBlock)(UIViewController* snapsho
 - (void)authValidatedToPostAuth:(SFSDKLaunchAction)launchAction;
 - (void)sendLaunchError:(NSError *)theLaunchError;
 - (void)sendPostLaunch;
+- (void)sendHideLoading;
 
 /**
  @return app type as a string

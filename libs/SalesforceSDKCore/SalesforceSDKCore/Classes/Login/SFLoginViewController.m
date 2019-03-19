@@ -38,6 +38,7 @@
 #import "SFSDKLoginViewControllerConfig.h"
 #import "SFOAuthInfo.h"
 #import "SFSDKWindowManager.h"
+#import "SalesforceSDKManager.h"
 
 SFSDK_USE_DEPRECATED_BEGIN
 
@@ -45,6 +46,8 @@ SFSDK_USE_DEPRECATED_BEGIN
 
 SFSDK_USE_DEPRECATED_END
 @property (nonatomic, strong) UINavigationBar *navBar;
+
+@property (nonatomic, strong) UIView *loadingView;
 
 // Reference to the login host list view controller
 @property (nonatomic, strong) SFSDKLoginHostListViewController *loginHostListViewController;
@@ -246,10 +249,34 @@ SFSDK_USE_DEPRECATED_END
 
     // Resize navBar
     self.navBar.frame = CGRectMake(0, self.topLayoutGuide.length, self.view.bounds.size.width, navBarHeight);
-
+    
+    // Remove the loader shown during login if it is displayed.
+    [SalesforceSDKManager.sharedManager sendHideLoading];
+    
+    // Add a loading bellow the web view
+    if (!_loadingView) {
+        _loadingView = [[[NSBundle mainBundle] loadNibNamed:@"LoadingView" owner:self options:nil] firstObject];
+        _loadingView.hidden = YES;
+        
+        if (_oauthView) {
+            [self.view insertSubview:_loadingView belowSubview:_oauthView];
+        } else {
+            [self.view addSubview:_loadingView];
+        }
+    }
+    
+    CGRect baseRect = CGRectMake(0, CGRectGetMaxY(self.navBar.frame), self.view.bounds.size.width, self.view.bounds.size.height - CGRectGetMaxY(self.navBar.frame));
+    
+    _loadingView.frame = baseRect;
+    
     // resize oAuth view
     if (_oauthView) {
-        _oauthView.frame = CGRectMake(0, CGRectGetMaxY(self.navBar.frame), self.view.bounds.size.width, self.view.bounds.size.height - CGRectGetMaxY(self.navBar.frame));
+        _oauthView.frame = baseRect;
+
+        WKWebView *webView = (WKWebView *)_oauthView;
+        webView.opaque = NO;
+        webView.backgroundColor = UIColor.clearColor;
+        webView.scrollView.backgroundColor = UIColor.clearColor;
     }
 }
 
