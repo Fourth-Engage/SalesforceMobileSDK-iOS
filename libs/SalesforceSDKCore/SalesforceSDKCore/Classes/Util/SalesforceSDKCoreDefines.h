@@ -66,6 +66,8 @@ typedef void (^SFSDKLogoutCallbackBlock)(void);
  */
 typedef void (^SFSDKSwitchUserCallbackBlock)(SFUserAccount*, SFUserAccount*);
 
+typedef void (^SFSDKHideLoadingCallbackBlock)(void);
+
 /**
  Callback block to implement for post app foregrounding actions.
  */

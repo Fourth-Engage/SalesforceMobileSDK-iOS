@@ -28,6 +28,11 @@
 #import "CDVLocalStorage.h"
 #import "CDVCommandDelegateImpl.h"
 #import <Foundation/NSCharacterSet.h>
+<<<<<<< Updated upstream
+=======
+#import "CDVLoadingViewService.h"
+#import <SalesforceSDKCore/SFUserAccountManager.h>
+>>>>>>> Stashed changes
 
 @interface CDVViewController () {
     NSInteger _userAgentLockToken;

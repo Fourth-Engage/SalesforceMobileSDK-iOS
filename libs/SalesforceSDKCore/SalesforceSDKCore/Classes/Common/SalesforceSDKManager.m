@@ -614,6 +614,13 @@ static NSString *const SFSDKShowDevDialogNotification = @"SFSDKShowDevDialogNoti
     }
 }
 
+- (void)sendHideLoading
+{
+    if (self.hideLoadingAction) {
+        self.hideLoadingAction();
+    }
+}
+
 - (void)sendUserAccountSwitch:(SFUserAccount *)fromUser toUser:(SFUserAccount *)toUser
 {
     _isLaunching = NO;
