@@ -10,6 +10,7 @@
 		2260F4E92204B9840008EEF3 /* CDVLoadingViewService.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CE268122033B8F00E11130 /* CDVLoadingViewService.m */; };
 		2260F52E2204BB440008EEF3 /* CDVLoadingViewService.h in Headers */ = {isa = PBXBuildFile; fileRef = C9CE268022033B8E00E11130 /* CDVLoadingViewService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2260F52F2204BB4C0008EEF3 /* CDVLoadingViewService.h in Headers */ = {isa = PBXBuildFile; fileRef = C9CE268022033B8E00E11130 /* CDVLoadingViewService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		22EB8EAA2242518C009E4F84 /* SalesforceSDKCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22EB8EA92242518C009E4F84 /* SalesforceSDKCore.framework */; };
 		28BFF9141F355A4E00DDF01A /* CDVLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 28BFF9121F355A4E00DDF01A /* CDVLogger.h */; };
 		28BFF9151F355A4E00DDF01A /* CDVLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BFF9131F355A4E00DDF01A /* CDVLogger.m */; };
 		30193A501AE6350A0069A75F /* CDVUIWebViewNavigationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30193A4E1AE6350A0069A75F /* CDVUIWebViewNavigationDelegate.m */; };
@@ -103,6 +104,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		22EB8EA92242518C009E4F84 /* SalesforceSDKCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SalesforceSDKCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		28BFF9121F355A4E00DDF01A /* CDVLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDVLogger.h; sourceTree = "<group>"; };
 		28BFF9131F355A4E00DDF01A /* CDVLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDVLogger.m; sourceTree = "<group>"; };
 		30193A4E1AE6350A0069A75F /* CDVUIWebViewNavigationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDVUIWebViewNavigationDelegate.m; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22EB8EAA2242518C009E4F84 /* SalesforceSDKCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,8 +208,17 @@
 				C0C01EB31E3911D50056E6CB /* Cordova */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				30325A0B136B343700982B63 /* VERSION */,
+				22EB8EA82242518B009E4F84 /* Frameworks */,
 			);
 			name = CordovaLib;
+			sourceTree = "<group>";
+		};
+		22EB8EA82242518B009E4F84 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				22EB8EA92242518C009E4F84 /* SalesforceSDKCore.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		28BFF9111F355A1D00DDF01A /* CDVLogger */ = {
