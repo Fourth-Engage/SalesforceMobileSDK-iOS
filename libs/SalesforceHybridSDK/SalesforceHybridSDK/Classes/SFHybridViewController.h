@@ -58,15 +58,10 @@ typedef void (^SFOAuthPluginAuthSuccessBlock)(SFOAuthInfo *_Nullable, NSDictiona
 /**
  Base view controller for Salesforce hybrid app components.
  */
-@interface SFHybridViewController : CDVViewController <WKNavigationDelegate, UIWebViewDelegate>
+@interface SFHybridViewController : CDVViewController <WKNavigationDelegate>
 {
     
 }
-
-/**
- Indicates if UIWebView is being used instead of WKWebView.
- */
-@property (nonatomic, readonly, assign) BOOL useUIWebView;
 
 /**
  The Remote Access object consumer key.
@@ -98,24 +93,17 @@ typedef void (^SFOAuthPluginAuthSuccessBlock)(SFOAuthInfo *_Nullable, NSDictiona
 @property (nonatomic, strong) NSString *incomingPushNotification;
 
 /**
- Designated initializer. Initializes the view controller with its hybrid view configuration. Uses WKWebView by default.
+ Designated initializer. Initializes the view controller with its hybrid view configuration and which view to use.
  @param viewConfig The hybrid view configuration associated with this component.
  */
 - (id) initWithConfig:(nullable SFHybridViewConfig *) viewConfig;
-
-/**
- Designated initializer. Initializes the view controller with its hybrid view configuration and which view to use.
- @param viewConfig The hybrid view configuration associated with this component.
- @param useUIWebView YES - to use UIWebView, NO - to use WKWebView.
- */
-- (id) initWithConfig:(nullable SFHybridViewConfig *) viewConfig useUIWebView:(BOOL) useUIWebView;
 //ari
-- (id) initWithConfig:(nullable SFHybridViewConfig *) viewConfig useUIWebView:(BOOL) useUIWebView incomingPushNotification:(NSString *) incomingPushNotification;
+- (id) initWithConfig:(nullable SFHybridViewConfig *) viewConfig incomingPushNotification:(NSString *) incomingPushNotification;
 
 /**
  * Initializes a new Cordova view with the specified bounds and engine.
  */
-- (UIView *)newCordovaViewWithFrameAndEngine:(CGRect)bounds webViewEngine:(NSString *)webViewEngine;
+- (UIView *)newCordovaViewWithFrameAndEngine:(CGRect)bounds;
 
 /**
  Used by the OAuth plugin to authenticate the user.

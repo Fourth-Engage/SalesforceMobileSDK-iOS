@@ -20,6 +20,7 @@
 #import "CDVUserAgentUtil.h"
 
 #import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
 
 // #define VerboseLog NSLog
 #define VerboseLog(...) do {} while (0)
@@ -54,13 +55,14 @@ static NSMutableArray* gPendingSetUserAgentBlocks = nil;
         BOOL cachedValueIsOld = ![systemAndLocale isEqualToString:cordovaUserAgentVersion];
 
         if ((gOriginalUserAgent == nil) || cachedValueIsOld) {
-            UIWebView* sampleWebView = [[UIWebView alloc] initWithFrame:CGRectZero];
-            gOriginalUserAgent = [sampleWebView stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"];
+            [[[WKWebView alloc] init] evaluateJavaScript:@"navigator.userAgent" completionHandler:^(NSString *userAgent, NSError *error) {
+                gOriginalUserAgent = userAgent;
+                
+                [userDefaults setObject:gOriginalUserAgent forKey:kCdvUserAgentKey];
+                [userDefaults setObject:systemAndLocale forKey:kCdvUserAgentVersionKey];
 
-            [userDefaults setObject:gOriginalUserAgent forKey:kCdvUserAgentKey];
-            [userDefaults setObject:systemAndLocale forKey:kCdvUserAgentVersionKey];
-
-            [userDefaults synchronize];
+                [userDefaults synchronize];
+            }];
         }
     }
     return gOriginalUserAgent;
@@ -68,7 +70,6 @@ static NSMutableArray* gPendingSetUserAgentBlocks = nil;
 
 + (void)onAppLocaleDidChange:(NSNotification*)notification
 {
-    // TODO: We should figure out how to update the user-agent of existing UIWebViews when this happens.
     // Maybe use the PDF bug (noted in setUserAgent:).
     gOriginalUserAgent = nil;
 }
@@ -113,9 +114,9 @@ static NSMutableArray* gPendingSetUserAgentBlocks = nil;
     NSAssert(gCurrentLockToken == lockToken, @"Got token %ld, expected %ld", (long)lockToken, (long)gCurrentLockToken);
     VerboseLog(@"User-Agent set to: %@", value);
 
-    // Setting the UserAgent must occur before a UIWebView is instantiated.
+    // Setting the UserAgent must occur.
     // It is read per instantiation, so it does not affect previously created views.
-    // Except! When a PDF is loaded, all currently active UIWebViews reload their
+    // Except! When a PDF is loaded, all currently active Web Views reload their
     // User-Agent from the NSUserDefaults some time after the DidFinishLoad of the PDF bah!
     NSDictionary* dict = [[NSDictionary alloc] initWithObjectsAndKeys:value, @"UserAgent", nil];
     [[NSUserDefaults standardUserDefaults] registerDefaults:dict];

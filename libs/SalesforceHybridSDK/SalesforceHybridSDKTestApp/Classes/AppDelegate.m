@@ -85,27 +85,22 @@ SFSDK_USE_DEPRECATED_BEGIN
 }
 
 - (NSString *) evalJS:(NSString *) js {
-    if (self.viewController.useUIWebView) {
-        NSString *jsResult = [(UIWebView *)(self.viewController.webView) stringByEvaluatingJavaScriptFromString:js];
-        return jsResult;
-    } else {
-        __block NSString *resultString = nil;
-        __block BOOL finished = NO;
-        [(WKWebView *)(self.viewController.webView) evaluateJavaScript:js completionHandler:^(id result, NSError *error) {
-            if (error == nil) {
-                if (result != nil) {
-                    resultString = [NSString stringWithFormat:@"%@", result];
-                }
-            } else {
-                [SFSDKLogger log:[self class] level:DDLogLevelDebug format:@"evaluateJavaScript error : %@", error.localizedDescription];
+    __block NSString *resultString = nil;
+    __block BOOL finished = NO;
+    [(WKWebView *)(self.viewController.webView) evaluateJavaScript:js completionHandler:^(id result, NSError *error) {
+        if (error == nil) {
+            if (result != nil) {
+                resultString = [NSString stringWithFormat:@"%@", result];
             }
-            finished = YES;
-        }];
-        while (!finished) {
-            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+        } else {
+            [SFSDKLogger log:[self class] level:DDLogLevelDebug format:@"evaluateJavaScript error : %@", error.localizedDescription];
         }
-        return resultString;
+        finished = YES;
+    }];
+    while (!finished) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
+    return resultString;
 }
 
 #pragma mark - SFAuthenticationManagerDelegate

@@ -981,12 +981,11 @@ static NSString *const SFSDKShowDevDialogNotification = @"SFSDKShowDevDialogNoti
         NSString *prodAppVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
         NSString *buildNumber = [[NSBundle mainBundle] infoDictionary][(NSString*)kCFBundleVersionKey];
         NSString *appVersion = [NSString stringWithFormat:@"%@(%@)", prodAppVersion, buildNumber];
-        NSString *webViewUserAgent = [self getUIWebViewUserAgent];
 
         // App type.
         NSString *appTypeStr = [self getAppTypeAsString];
         NSString *myUserAgent = [NSString stringWithFormat:
-                                 @"SalesforceMobileSDK/%@ %@/%@ (%@) %@/%@ %@%@ uid_%@ ftr_%@ %@",
+                                 @"SalesforceMobileSDK/%@ %@/%@ (%@) %@/%@ %@%@ uid_%@ ftr_%@",
                                  SALESFORCE_SDK_VERSION,
                                  [curDevice systemName],
                                  [curDevice systemVersion],
@@ -996,24 +995,10 @@ static NSString *const SFSDKShowDevDialogNotification = @"SFSDKShowDevDialogNoti
                                  appTypeStr,
                                  (qualifier != nil ? qualifier : @""),
                                  uid,
-                                 [[[SFSDKAppFeatureMarkers appFeatures].allObjects sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] componentsJoinedByString:@"."],
-                                 webViewUserAgent
+                                 [[[SFSDKAppFeatureMarkers appFeatures].allObjects sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] componentsJoinedByString:@"."]
                                  ];
         return myUserAgent;
     };
-}
-
-- (NSString *)getUIWebViewUserAgent {
-    static NSString *webViewUserAgent = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once_on_main_thread(&onceToken, ^{
-        // Grabs the current user agent. This is very hackish but WKWebView, which we
-        // want to transition too currently evaluates Javscript asynchronously (11/2/17)
-        UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectZero];
-        webViewUserAgent = [webView stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"];
-    });
-    
-    return webViewUserAgent;
 }
 
 void dispatch_once_on_main_thread(dispatch_once_t *predicate, dispatch_block_t block) {
