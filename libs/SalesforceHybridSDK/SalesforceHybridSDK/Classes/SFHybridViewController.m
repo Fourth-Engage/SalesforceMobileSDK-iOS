@@ -65,7 +65,6 @@ static NSString * const kErrorContextAuthExpiredSessionRefresh = @"AuthRefreshEx
 static NSString * const kVFPingPageUrl = @"/apexpages/utils/ping.apexp";
 
 // App feature constant.
-static NSString * const kSFAppFeatureUsesUIWebView = @"WV";
 SFSDK_USE_DEPRECATED_BEGIN
 @interface SFHybridViewController()
 {
@@ -73,27 +72,15 @@ SFSDK_USE_DEPRECATED_BEGIN
     SFHybridViewConfig *_hybridViewConfig;
 }
 
-@property (nonatomic, readwrite, assign) BOOL useUIWebView;
-
 /**
  * Hidden WKWebView used to load the VF ping page.
  */
 @property (nonatomic, strong) WKWebView *vfPingPageHiddenWKWebView;
 
 /**
- * Hidden UIWebView used to load the VF ping page.
- */
-@property (nonatomic, strong) UIWebView *vfPingPageHiddenUIWebView;
-
-/**
  * WKWebView for processing the error page, in the event of a fatal error during bootstrap.
  */
 @property (nonatomic, strong) WKWebView *errorPageWKWebView;
-
-/**
- * UIWebView for processing the error page, in the event of a fatal error during bootstrap.
- */
-@property (nonatomic, strong) UIWebView *errorPageUIWebView;
 
 /**
  * Whether or not the input URL is one of the reserved URLs in the login flow, for consideration
@@ -172,17 +159,8 @@ SFSDK_USE_DEPRECATED_BEGIN
 
 - (id) initWithConfig:(SFHybridViewConfig *) viewConfig
 {
-    return [self initWithConfig:viewConfig useUIWebView:NO];
-}
-
-- (id) initWithConfig:(SFHybridViewConfig *) viewConfig useUIWebView:(BOOL) useUIWebView
-{
     self = [super init];
     if (self) {
-        self.useUIWebView = useUIWebView;
-        if (useUIWebView) {
-            [SFSDKAppFeatureMarkers registerAppFeature:kSFAppFeatureUsesUIWebView];
-        }
         _hybridViewConfig = (viewConfig == nil ? [SFHybridViewConfig fromDefaultConfigFile] : viewConfig);
         NSAssert(_hybridViewConfig != nil, @"_hybridViewConfig was not properly initialized. See output log for errors.");
         self.startPage = _hybridViewConfig.startPage;
@@ -195,21 +173,21 @@ SFSDK_USE_DEPRECATED_BEGIN
 }
 
 // ari
-- (id) initWithConfig:(SFHybridViewConfig *) viewConfig useUIWebView:(BOOL) useUIWebView incomingPushNotification:(NSString *) incomingPushNotification
+- (id) initWithConfig:(SFHybridViewConfig *) viewConfig incomingPushNotification:(NSString *) incomingPushNotification
 {
     self.incomingPushNotification = incomingPushNotification;
-    return [self initWithConfig:viewConfig useUIWebView:useUIWebView];
+    return [self initWithConfig:viewConfig];
     
 }
 
 - (UIView *)newCordovaViewWithFrame:(CGRect)bounds
 {
-    return [self newCordovaViewWithFrameAndEngine:bounds webViewEngine:self.useUIWebView ? @"CDVUIWebViewEngine" : @"CDVWKWebViewEngine"];
+    return [self newCordovaViewWithFrameAndEngine:bounds];
 }
 
-- (UIView *)newCordovaViewWithFrameAndEngine:(CGRect)bounds webViewEngine:(NSString *)webViewEngine
+- (UIView *)newCordovaViewWithFrameAndEngine:(CGRect)bounds
 {
-    [self.settings setCordovaSetting:webViewEngine forKey:@"CordovaWebViewEngine"];
+    [self.settings setCordovaSetting:@"CDVWKWebViewEngine" forKey:@"CordovaWebViewEngine"];
     return [super newCordovaViewWithFrame:bounds];
 }
 
@@ -217,12 +195,8 @@ SFSDK_USE_DEPRECATED_BEGIN
 {
     self.vfPingPageHiddenWKWebView.navigationDelegate = nil;
     SFRelease(_vfPingPageHiddenWKWebView);
-    self.vfPingPageHiddenUIWebView.delegate = nil;
-    SFRelease(_vfPingPageHiddenUIWebView);
     self.errorPageWKWebView.navigationDelegate = nil;
     SFRelease(_errorPageWKWebView);
-    self.errorPageUIWebView.delegate = nil;
-    SFRelease(_errorPageUIWebView);
 }
 
 - (void)viewDidLoad
@@ -355,43 +329,22 @@ SFSDK_USE_DEPRECATED_BEGIN
 {
     NSString *errorPage = _hybridViewConfig.errorPage;
     NSURL *errorPageUrl = [self fullFileUrlForPage:errorPage];
-    if (self.useUIWebView) {
-        SFSDKReachability *reach = [SFSDKReachability reachabilityForInternetConnection];
-        [reach startNotifier];
-        
-        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(connectionChanged:) name:kSFSDKReachabilityChangedNotification object:nil];
-        
-        NSError *error = [NSError errorWithDomain:errorContext code:errorCode userInfo:nil];
-        [SalesforceSDKManager.sharedManager sendLaunchError:error];
-//        self.errorPageUIWebView = [[UIWebView alloc] initWithFrame:self.view.frame];
-//        self.errorPageUIWebView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-//        self.errorPageUIWebView.delegate = self;
-//        [self.view addSubview:self.errorPageUIWebView];
-    } else {
-        WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
-        config.processPool = SFSDKWebViewStateManager.sharedProcessPool;
-        self.errorPageWKWebView = [[WKWebView alloc] initWithFrame:self.view.frame configuration:config];
-        self.errorPageWKWebView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        self.errorPageWKWebView.navigationDelegate = self;
-        [self.view addSubview:self.errorPageWKWebView];
-    }
+    
+    WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
+    config.processPool = SFSDKWebViewStateManager.sharedProcessPool;
+    self.errorPageWKWebView = [[WKWebView alloc] initWithFrame:self.view.frame configuration:config];
+    self.errorPageWKWebView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    self.errorPageWKWebView.navigationDelegate = self;
+    [self.view addSubview:self.errorPageWKWebView];
+    
     if (errorPageUrl != nil) {
         NSURL *errorPageUrlWithError = [self createErrorPageUrl:errorPageUrl code:errorCode description:errorDescription context:errorContext];
         NSURLRequest *errorRequest = [NSURLRequest requestWithURL:errorPageUrlWithError];
-        if (self.useUIWebView) {
-            [self.errorPageUIWebView loadRequest:errorRequest];
-        } else {
-            [self.errorPageWKWebView loadRequest:errorRequest];
-        }
+        [self.errorPageWKWebView loadRequest:errorRequest];
     } else {
-        
         // Error page does not exist. Generate a generic page with the error.
         NSString *errorContent = [self createDefaultErrorPageContentWithCode:errorCode description:errorDescription context:errorContext];
-        if (self.useUIWebView) {
-            [self.errorPageUIWebView loadHTMLString:errorContent baseURL:nil];
-        } else {
-            [self.errorPageWKWebView loadHTMLString:errorContent baseURL:nil];
-        }
+        [self.errorPageWKWebView loadHTMLString:errorContent baseURL:nil];
     }
 }
 
@@ -574,12 +527,6 @@ SFSDK_USE_DEPRECATED_BEGIN
     [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:CDVPluginResetNotification object:webView]];
 }
 
-- (void) webViewDidStartLoad:(UIWebView *) webView
-{
-    [self.commandQueue resetRequestId];
-    [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:CDVPluginResetNotification object:self.webView]];
-}
-
 - (void) webView:(WKWebView *) webView decidePolicyForNavigationAction:(WKNavigationAction *) navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy)) decisionHandler
 {
     [SFSDKHybridLogger d:[self class] format:@"webView:decidePolicyForNavigationAction:decisionHandler: Loading URL '%@'",
@@ -663,104 +610,17 @@ SFSDK_USE_DEPRECATED_BEGIN
     }
 }
 
-- (BOOL) webView:(UIWebView *) webView shouldStartLoadWithRequest:(NSURLRequest *) request navigationType:(UIWebViewNavigationType) navigationType
-{
-    [SFSDKHybridLogger d:[self class] format:@"webView:shouldStartLoadWithRequest:navigationType: Loading URL '%@'", [request.URL redactedAbsoluteString:@[@"sid"]]];
-    
-    // Hidden ping page load.
-    if ([webView isEqual:self.vfPingPageHiddenUIWebView]) {
-        [SFSDKHybridLogger d:[self class] message:@"Setting up VF web state after plugin-based refresh."];
-        return YES;
-    }
-    
-    // Local error page load.
-    if ([webView isEqual:self.errorPageUIWebView]) {
-        [SFSDKHybridLogger d:[self class] format:@"Local error page ('%@') is loading.", request.URL.absoluteString];
-        return YES;
-    }
-    
-    // Cordova web view load.
-    if ([webView isEqual:self.webView]) {
-        
-        /*
-         * If the request is attempting to refresh an invalid session, take over
-         * the refresh process via the OAuth refresh flow in the container.
-         */
-        NSString *refreshUrl = [self isLoginRedirectUrl:request.URL];
-        if (refreshUrl != nil) {
-            [SFSDKHybridLogger w:[self class] message:@"Caught login redirect from session timeout. Reauthenticating."];
-            
-            /*
-             * Reconfigure user agent. Basically this ensures that Cordova whitelisting won't apply to the
-             * UIWebView that hosts the login screen (important for SSO outside of Salesforce domains).
-             */
-            [SFSDKWebUtils configureUserAgent:[self sfHybridViewUserAgentString]];
-            __weak typeof(self) weakSelf = self;
-            [self refreshCredentials:[SFUserAccountManager sharedInstance].currentUser.credentials
-                          completion:^(SFOAuthInfo *authInfo, SFUserAccount *userAccount) {
-                              [SFUserAccountManager sharedInstance].currentUser = userAccount;
-                              
-                              // Reset the user agent back to Cordova.
-                              [weakSelf authenticationCompletion:refreshUrl authInfo:authInfo];
-                          } failure:^(SFOAuthInfo *authInfo, NSError *error) {
-                              __strong typeof(weakSelf) strongSelf = weakSelf;
-                              if ([strongSelf logoutOnInvalidCredentials:error]) {
-                                  [SFSDKHybridLogger e:[strongSelf class] message:@"Could not refresh expired session. Logging out."];
-                                  NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
-                                  attributes[@"errorCode"] = [NSNumber numberWithInteger:error.code];
-                                  attributes[@"errorDescription"] = error.localizedDescription;
-                                  [SFSDKEventBuilderHelper createAndStoreEvent:@"userLogout" userAccount:nil className:NSStringFromClass([strongSelf class]) attributes:attributes];
-                                  [strongSelf logout];
-                              } else {
-                                  
-                                  // Error is not invalid credentials, or developer otherwise wants to handle it.
-                                  [strongSelf loadErrorPageWithCode:error.code description:error.localizedDescription context:kErrorContextAuthExpiredSessionRefresh];
-                              }
-                          }];
-            return NO;
-        }
-        NSURL* url = request.URL;
-        
-        /*
-         * Execute any commands queued with cordova.exec() on the JS side.
-         * The part of the URL after gap:// is irrelevant.
-         */
-        if ([[url scheme] isEqualToString:@"gap"]) {
-            [self.commandQueue fetchCommandsFromJs];
-            [self.commandQueue executePending];
-            return NO;
-        } else {
-            [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:CDVPluginHandleOpenURLNotification object:url]];
-        }
-    }
-    return YES;
-}
-
 - (void) webView:(WKWebView *) webView didFinishNavigation:(WKNavigation *) navigation
 {
     [self finishLoadActions:webView navigation:navigation];
 }
 
-- (void) webViewDidFinishLoad:(UIWebView *) webView
-{
-    [self finishLoadActions:webView navigation:nil];
-}
-
 - (void) finishLoadActions:(UIView *) webView navigation:(WKNavigation *) navigation
 {
-    NSURL *requestUrl = nil;
-    if (self.useUIWebView) {
-        requestUrl = ((UIWebView *) webView).request.URL;
-    } else {
-        requestUrl = ((WKWebView *) webView).URL;
-    }
+    NSURL *requestUrl = ((WKWebView *) webView).URL;
     NSArray *redactParams = @[@"sid"];
     NSString *redactedUrl = [requestUrl redactedAbsoluteString:redactParams];
     [SFSDKHybridLogger d:[self class] format:@"finishLoadActions: Loaded %@", redactedUrl];
-    if ([webView isEqual:self.vfPingPageHiddenUIWebView]) {
-        [SFSDKHybridLogger d:[self class] format:@"Finished loading VF ping page '%@'.", redactedUrl];
-        return;
-    }
     if ([webView isEqual:self.webView]) {
         
         /*
@@ -782,13 +642,6 @@ SFSDK_USE_DEPRECATED_BEGIN
 }
 
 - (void) webView:(WKWebView *) webView didFailNavigation:(WKNavigation *) navigation withError:(NSError *) error
-{
-    if ([webView isEqual:self.webView]) {
-        [self loadErrorPageWithError:error];
-    }
-}
-
-- (void) webView:(UIWebView *) webView didFailLoadWithError:(NSError *) error
 {
     if ([webView isEqual:self.webView]) {
         [self loadErrorPageWithError:error];
@@ -845,11 +698,7 @@ SFSDK_USE_DEPRECATED_BEGIN
         }
         NSURL *returnUrlAfterAuth = [self frontDoorUrlWithReturnUrl:originalUrl returnUrlIsEncoded:YES createAbsUrl:createAbsUrl];
         NSURLRequest *newRequest = [NSURLRequest requestWithURL:returnUrlAfterAuth];
-        if (self.useUIWebView) {
-            [(UIWebView *)(self.webView) loadRequest:newRequest];
-        } else {
-            [(WKWebView *)(self.webView) loadRequest:newRequest];
-        }
+        [(WKWebView *)(self.webView) loadRequest:newRequest];
     }
 }
 
@@ -862,17 +711,11 @@ SFSDK_USE_DEPRECATED_BEGIN
         [instanceUrl appendFormat:@"/visualforce/session?url=%@&autoPrefixVFDomain=true", encodedPingUrlParam];
         NSURL *pingURL = [[NSURL alloc] initWithString:instanceUrl];
         NSURLRequest *pingRequest = [[NSURLRequest alloc] initWithURL:pingURL];
-        if (self.useUIWebView) {
-            self.vfPingPageHiddenUIWebView = [[UIWebView alloc] initWithFrame:CGRectZero];
-            self.vfPingPageHiddenUIWebView.delegate = self;
-            [self.vfPingPageHiddenUIWebView loadRequest:pingRequest];
-        } else {
-            WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
-            config.processPool = SFSDKWebViewStateManager.sharedProcessPool;
-            self.vfPingPageHiddenWKWebView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:config];
-            self.vfPingPageHiddenWKWebView.navigationDelegate = self;
-            [self.vfPingPageHiddenWKWebView loadRequest:pingRequest];
-        }
+        WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
+        config.processPool = SFSDKWebViewStateManager.sharedProcessPool;
+        self.vfPingPageHiddenWKWebView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:config];
+        self.vfPingPageHiddenWKWebView.navigationDelegate = self;
+        [self.vfPingPageHiddenWKWebView loadRequest:pingRequest];
     }
 }
 
@@ -918,12 +761,7 @@ SFSDK_USE_DEPRECATED_BEGIN
     [SalesforceSDKManager.sharedManager sendPostLaunch];
     
     NSURLRequest *newRequest = [NSURLRequest requestWithURL:self.appHomeUrl];
-    
-    if (self.useUIWebView) {
-        [(UIWebView *)(self.webView) loadRequest:newRequest];
-    } else {
-        [(WKWebView *)(self.webView) loadRequest:newRequest];
-    }
+    [(WKWebView *)(self.webView) loadRequest:newRequest];
 }
 
 @end

@@ -34,7 +34,6 @@ static NSString *const ERR_NO_COOKIE_NAMES = @"No cookie names given to delete."
 static WKProcessPool *_processPool = nil;
 
 + (void)resetSessionWithNewAccessToken:(NSString *)accessToken isSecureProtocol:(BOOL)isSecure {
-     //reset UIWebView related state if any
     [self removeUIWebViewCookies:@[SID_COOKIE] fromDomains:self.domains];
     for (NSString *domain in self.domains) {
         [self addSidCookieForDomain:domain withAccessToken:accessToken isSecureProtocol:isSecure];
@@ -43,7 +42,7 @@ static WKProcessPool *_processPool = nil;
 }
 
 + (void)removeSession {
-    //reset UIWebView related state if any
+    //reset Web View related state if any
     [self removeUIWebViewCookies:@[SID_COOKIE] fromDomains:self.domains];
     self.sharedProcessPool = nil;
 }
