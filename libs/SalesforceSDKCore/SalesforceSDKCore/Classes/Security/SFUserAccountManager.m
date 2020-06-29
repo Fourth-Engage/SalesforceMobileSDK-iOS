@@ -122,8 +122,8 @@ static NSString *const  kOptionsClientKey          = @"clientIdentifier";
     static dispatch_once_t pred;
     static SFUserAccountManager *userAccountManager = nil;
     dispatch_once(&pred, ^{
-		userAccountManager = [[self alloc] init];
-	});
+        userAccountManager = [[self alloc] init];
+    });
     static dispatch_once_t pred2;
     dispatch_once(&pred2, ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:SFUserAccountManagerDidFinishUserInitNotification object:nil];
@@ -132,8 +132,8 @@ static NSString *const  kOptionsClientKey          = @"clientIdentifier";
 }
 
 - (id)init {
-	self = [super init];
-	if (self) {
+    self = [super init];
+    if (self) {
         self.delegates = [NSHashTable weakObjectsHashTable];
         _accountPersister = [SFDefaultUserAccountPersister new];
         [self migrateUserDefaults];
@@ -148,7 +148,7 @@ static NSString *const  kOptionsClientKey          = @"clientIdentifier";
         };
         [self populateErrorHandlers];
      }
-	return self;
+    return self;
 }
 
 - (void)dealloc {
@@ -1296,8 +1296,9 @@ static NSString *const  kOptionsClientKey          = @"clientIdentifier";
 - (void)retrievedIdentityData:(SFSDKOAuthClient *)client
 {
     // NB: This method is assumed to run after identity data has been refreshed from the service, or otherwise
+    if (client.idData == nil) { return; }
+    
     // already exists.
-    NSAssert(client.idData != nil, @"Identity data should not be nil/empty at this point.");
     __weak typeof(self) weakSelf = self;
     [client dismissAuthViewControllerIfPresent];
     
