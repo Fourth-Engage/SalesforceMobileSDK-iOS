@@ -34,7 +34,7 @@ static NSString *const ERR_NO_COOKIE_NAMES = @"No cookie names given to delete."
 static WKProcessPool *_processPool = nil;
 
 + (void)resetSessionWithNewAccessToken:(NSString *)accessToken isSecureProtocol:(BOOL)isSecure {
-    [self removeUIWebViewCookies:@[SID_COOKIE] fromDomains:self.domains];
+    [self removeWebViewCookies:@[SID_COOKIE] fromDomains:self.domains];
     for (NSString *domain in self.domains) {
         [self addSidCookieForDomain:domain withAccessToken:accessToken isSecureProtocol:isSecure];
     }
@@ -43,7 +43,7 @@ static WKProcessPool *_processPool = nil;
 
 + (void)removeSession {
     //reset Web View related state if any
-    [self removeUIWebViewCookies:@[SID_COOKIE] fromDomains:self.domains];
+    [self removeWebViewCookies:@[SID_COOKIE] fromDomains:self.domains];
     self.sharedProcessPool = nil;
 }
 
@@ -61,7 +61,7 @@ static WKProcessPool *_processPool = nil;
 }
 
 #pragma mark Private helper methods
-+ (void)removeUIWebViewCookies:(NSArray *)cookieNames fromDomains:(NSArray *)domainNames {
++ (void)removeWebViewCookies:(NSArray *)cookieNames fromDomains:(NSArray *)domainNames {
     NSAssert(cookieNames != nil && [cookieNames count] > 0, ERR_NO_COOKIE_NAMES);
     NSAssert(domainNames != nil && [domainNames count] > 0, ERR_NO_DOMAIN_NAMES);
     NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
