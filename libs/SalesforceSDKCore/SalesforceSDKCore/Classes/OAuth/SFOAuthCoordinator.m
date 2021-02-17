@@ -812,6 +812,24 @@ static NSString * const kSFECParameter = @"ec";
     }
 }
 
+- (void)handleSSOResponse:(NSURL *)url {
+    NSString *sid = [url valueForParameterName:@"sid"];
+    
+    if (sid.length == 0) {
+        return;
+    }
+    
+    self.credentials.accessToken = sid;
+    self.credentials.issuedAt = [[NSDate alloc] init];
+    self.credentials.communityUrl = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@://%@", self.credentials.protocol, self.credentials.domain]];
+            
+    NSString *baseUrlString = [self.credentials.apiUrl absoluteString];
+    NSString *approvalUrlString = [self generateApprovalUrlString];
+    NSString *escapedApprovalUrlString = [approvalUrlString stringByURLEncoding];
+    NSString *frontDoorUrlString = [NSString stringWithFormat:@"%@/secur/frontdoor.jsp?sid=%@&retURL=%@", baseUrlString, self.credentials.accessToken, escapedApprovalUrlString];
+    [self loadWebViewWithUrlString:frontDoorUrlString cookie:YES];
+}
+
 - (void)handleUserAgentResponse:(NSURL *)requestUrl {
     NSString *response = nil;
     
@@ -1011,7 +1029,10 @@ static NSString * const kSFECParameter = @"ec";
     } else if ([self isSPAppRedirectURL:requestUrl]){
         [self handleIDPAuthCodeResponse:url];
         decisionHandler(WKNavigationActionPolicyCancel);
-    }else {
+    } else if ([self isSSOURL:requestUrl]) {
+        [self handleSSOResponse:url];
+        decisionHandler(WKNavigationActionPolicyAllow);
+    } else {
         decisionHandler(WKNavigationActionPolicyAllow);
     }
 }
@@ -1056,6 +1077,11 @@ static NSString * const kSFECParameter = @"ec";
 - (BOOL) isSPAppRedirectURL:(NSString *)requestUrlString
 {
     return (self.spAppCredentials.redirectUri && [[requestUrlString lowercaseString] hasPrefix:[self.spAppCredentials.redirectUri lowercaseString]]);
+}
+
+- (BOOL) isSSOURL:(NSString *) requestUrlString
+{
+    return [requestUrlString.lowercaseString containsString:@"frontdoor.jsp"] && [requestUrlString.lowercaseString containsString:@"&loginurl="];
 }
 
 - (void)sfwebView:(WKWebView *)webView didFailLoadWithError:(NSError *)error
