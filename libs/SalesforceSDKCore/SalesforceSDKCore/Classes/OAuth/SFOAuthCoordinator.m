@@ -818,15 +818,20 @@ static NSString * const kSFECParameter = @"ec";
     if (sid.length == 0) {
         return;
     }
+        
+    sid = [sid stringByRemovingPercentEncoding];
+    NSString *orgId = [sid componentsSeparatedByString:@"!"].firstObject;
     
     self.credentials.accessToken = sid;
     self.credentials.issuedAt = [[NSDate alloc] init];
     self.credentials.communityUrl = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@://%@", self.credentials.protocol, self.credentials.domain]];
-            
+    self.credentials.organizationId = orgId;
+                
     NSString *baseUrlString = [self.credentials.apiUrl absoluteString];
     NSString *approvalUrlString = [self generateApprovalUrlString];
     NSString *escapedApprovalUrlString = [approvalUrlString stringByURLEncoding];
-    NSString *frontDoorUrlString = [NSString stringWithFormat:@"%@/secur/frontdoor.jsp?sid=%@&retURL=%@", baseUrlString, self.credentials.accessToken, escapedApprovalUrlString];
+    NSString *frontDoorUrlString = [NSString stringWithFormat:@"%@/secur/frontdoor.jsp?sid=%@&orgId=%@&retURL=%@", baseUrlString, self.credentials.accessToken, orgId, escapedApprovalUrlString];
+
     [self loadWebViewWithUrlString:frontDoorUrlString cookie:YES];
 }
 
@@ -1030,8 +1035,13 @@ static NSString * const kSFECParameter = @"ec";
         [self handleIDPAuthCodeResponse:url];
         decisionHandler(WKNavigationActionPolicyCancel);
     } else if ([self isSSOURL:requestUrl]) {
+        // Stop current requests to avoid error messages.
+        [webView stopLoading];
+        
+        // Redirect with data retreived from the request.
         [self handleSSOResponse:url];
-        decisionHandler(WKNavigationActionPolicyAllow);
+        
+        decisionHandler(WKNavigationActionPolicyCancel);
     } else {
         decisionHandler(WKNavigationActionPolicyAllow);
     }
