@@ -24,6 +24,7 @@
 #import <WebKit/WebKit.h>
 #import "SFSDKWebViewStateManager.h"
 #import "SFUserAccountManager.h"
+#import "NSString+SFAdditions.h"
 static NSString *const SID_COOKIE = @"sid";
 static NSString *const TRUE_STRING = @"TRUE";
 static NSString *const ERR_NO_DOMAIN_NAMES = @"No domain names given for deleting cookies.";
@@ -32,14 +33,6 @@ static NSString *const ERR_NO_COOKIE_NAMES = @"No cookie names given to delete."
 @implementation SFSDKWebViewStateManager
 
 static WKProcessPool *_processPool = nil;
-
-+ (void)resetSessionWithNewAccessToken:(NSString *)accessToken isSecureProtocol:(BOOL)isSecure {
-    [self removeUIWebViewCookies:@[SID_COOKIE] fromDomains:self.domains];
-    for (NSString *domain in self.domains) {
-        [self addSidCookieForDomain:domain withAccessToken:accessToken isSecureProtocol:isSecure];
-    }
-    [self removeWKWebViewCookies:self.domains withCompletion:nil];
-}
 
 + (void)removeSession {
     //reset Web View related state if any
@@ -103,36 +96,91 @@ static WKProcessPool *_processPool = nil;
                      }];
 }
 
-+ (void)addSidCookieForDomain:(NSString*)domain withAccessToken:accessToken isSecureProtocol:(BOOL)isSecure {
-    NSAssert(domain != nil && [domain length] > 0, @"addSidCookieForDomain: domain cannot be empty");
-    [SFSDKCoreLogger d:[self class] format:@"addSidCookieForDomain: %@", domain];
-
-    // Set the session ID cookie to be used by the web view.
-    NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    [cookieStorage setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
-    NSMutableDictionary *newSidCookieProperties = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-            domain, NSHTTPCookieDomain,
-            @"/", NSHTTPCookiePath,
-            accessToken, NSHTTPCookieValue,
-            SID_COOKIE, NSHTTPCookieName,
-            TRUE_STRING, NSHTTPCookieDiscard,
-                    nil];
-    if (isSecure) {
-        newSidCookieProperties[NSHTTPCookieSecure] = TRUE_STRING;
-    }
-    NSHTTPCookie *sidCookie0 = [NSHTTPCookie cookieWithProperties:newSidCookieProperties];
-    [cookieStorage setCookie:sidCookie0];
-}
-
 + (NSArray<NSString *> *) domains {
     return @[@".salesforce.com", @".force.com", @".cloudforce.com"];
 }
 
-+ (void)resetSessionCookie
++ (void)resetSessionCookie:(nullable void (^)(BOOL success))completion
 {
-    BOOL isSecure = [[SFUserAccountManager   sharedInstance].currentUser.credentials.protocol isEqualToString:@"https"];
-    [SFSDKWebViewStateManager resetSessionWithNewAccessToken:[SFUserAccountManager   sharedInstance].currentUser.credentials.accessToken
-                                            isSecureProtocol:isSecure];
+    NSString *baseUrl = [[SFUserAccountManager sharedInstance].currentUser.credentials.apiUrl absoluteString];
+    NSString *accessToken = [SFUserAccountManager sharedInstance].currentUser.credentials.accessToken;
+    NSString *retUrl = [[NSString stringWithFormat:@"%@%@", baseUrl, @"/apex/FMPApp"] stringByURLEncoding];
+    NSString *cookieRefreshUrl = [NSString stringWithFormat:@"%@/secur/frontdoor.jsp?sid=%@&retURL=%@", baseUrl, accessToken, retUrl];
+    
+    NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:(id<NSURLSessionDelegate>)[self class] delegateQueue:nil];
+    
+    NSURLSessionDataTask *getDataTask = [urlSession dataTaskWithURL:[NSURL URLWithString:cookieRefreshUrl] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        if (error) {
+            NSLog(@"SF set cookies error: %@", [error localizedDescription]);
+            
+            if (completion) {
+                completion(false);
+            }
+            
+            return;
+        }
+        
+        if (!response) {
+            if (completion) {
+                completion(false);
+            }
+            
+            return;
+        }
+        
+        NSHTTPURLResponse *resp = (NSHTTPURLResponse*)response;
+        NSDictionary *headers = [resp allHeaderFields];
+        NSURL *url = [resp URL];
+        
+        if (!headers || !url) {
+            if (completion) {
+                completion(false);
+            }
+            
+            return;
+        }
+        
+        if (resp.statusCode != 200) {
+            if (completion) {
+                completion(false);
+            }
+            
+            return;
+        }
+        
+        dispatch_group_t cookiesGroup = dispatch_group_create();
+        
+        for (NSHTTPCookie *cookie in [NSHTTPCookie cookiesWithResponseHeaderFields:headers forURL:url]) {
+            if (@available(iOS 11.0, *)) {
+                dispatch_group_async(cookiesGroup, dispatch_get_main_queue(), ^{
+                    WKHTTPCookieStore *webviewCookiesStore = [[WKWebsiteDataStore defaultDataStore] httpCookieStore];
+                    
+                    dispatch_group_enter(cookiesGroup);
+                    [webviewCookiesStore setCookie:cookie completionHandler:^{
+                        dispatch_group_leave(cookiesGroup);
+                    }];
+                });
+            }
+        }
+        
+        dispatch_group_wait(cookiesGroup, DISPATCH_TIME_FOREVER);
+        
+        if (completion) {
+            completion(true);
+        }
+    }];
+    
+    [getDataTask resume];
+}
+
++ (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
+                     willPerformHTTPRedirection:(NSHTTPURLResponse *)response
+                                     newRequest:(NSURLRequest *)request
+                              completionHandler:(void (^)(NSURLRequest * _Nullable))completionHandler
+{
+    completionHandler(nil); // Don't follow redirects
 }
 
 @end

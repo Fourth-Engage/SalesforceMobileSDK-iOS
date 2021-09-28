@@ -141,8 +141,7 @@ SFSDK_USE_DEPRECATED_BEGIN
  *
  * @param originalUrl The original URL being called before the session timed out.
  */
-- (void)authenticationCompletion:(NSString *)originalUrl authInfo:(SFOAuthInfo *)authInfo;
-
+- (void)authenticationCompletion:(NSString *)originalUrl authInfo:(SFOAuthInfo *)authInfo completion:(nullable void (^)(BOOL success))completion;
 /**
  * Loads the VF ping page in an invisible WKWebView and sets session cookies for the VF domain.
  */
@@ -244,7 +243,7 @@ SFSDK_USE_DEPRECATED_BEGIN
     
     // Remote app. Device is online.
     if ([self userIsAuthenticated]) {
-        [SFSDKWebViewStateManager resetSessionCookie];
+        [SFSDKWebViewStateManager resetSessionCookie:nil];
     }
     [self configureRemoteStartPage];
     [super viewDidLoad];
@@ -292,15 +291,21 @@ SFSDK_USE_DEPRECATED_BEGIN
     SFOAuthFlowSuccessCallbackBlock authCompletionBlock = ^(SFOAuthInfo *authInfo, SFUserAccount *userAccount) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         [SFUserAccountManager sharedInstance].currentUser = userAccount;
-        [strongSelf authenticationCompletion:nil authInfo:authInfo];
-        
-        if (authInfo.authType == SFOAuthTypeRefresh) {
-            [strongSelf loadVFPingPage];
-        }
-        if (completionBlock != NULL) {
-            NSDictionary *authDict = [self credentialsAsDictionary];
-            completionBlock(authInfo, authDict);
-        }
+        [strongSelf authenticationCompletion:nil authInfo:authInfo completion:^(BOOL success) {
+            if (authInfo.authType == SFOAuthTypeRefresh) {
+                [strongSelf loadVFPingPage];
+            }
+            
+            if (!success && failureBlock != NULL) {
+                failureBlock(authInfo, [NSError errorWithDomain:@"SF cookie refresh error" code:1 userInfo:nil]);
+                return;
+            }
+
+            if (completionBlock != NULL) {
+                NSDictionary *authDict = [self credentialsAsDictionary];
+                completionBlock(authInfo, authDict);
+            }
+        }];
     };
     
     SFOAuthFlowFailureCallbackBlock authFailureBlock = ^(SFOAuthInfo *authInfo, NSError *error) {
@@ -554,10 +559,11 @@ SFSDK_USE_DEPRECATED_BEGIN
             [SFSDKWebUtils configureUserAgent:[self sfHybridViewUserAgentString]];
             [self refreshCredentials:[SFUserAccountManager sharedInstance].currentUser.credentials
                           completion:^(SFOAuthInfo *authInfo, SFUserAccount *userAccount) {
+                              __strong __typeof(self) strongSelf = weakSelf;
                               [SFUserAccountManager sharedInstance].currentUser = userAccount;
                               
                               // Reset the user agent back to Cordova.
-                              [weakSelf authenticationCompletion:refreshUrl authInfo:authInfo];
+                              [strongSelf authenticationCompletion:refreshUrl authInfo:authInfo completion:nil];
                           } failure:^(SFOAuthInfo *authInfo, NSError *error) {
                               __strong typeof(weakSelf) strongSelf = weakSelf;
                               if ([strongSelf logoutOnInvalidCredentials:error]) {
@@ -684,22 +690,25 @@ SFSDK_USE_DEPRECATED_BEGIN
     return NO;
 }
 
-- (void)authenticationCompletion:(NSString *)originalUrl authInfo:(SFOAuthInfo *)authInfo
+- (void)authenticationCompletion:(NSString *)originalUrl authInfo:(SFOAuthInfo *)authInfo completion:(nullable void (^)(BOOL success))completion
 {
     [SFSDKHybridLogger d:[self class] message:@"authenticationCompletion:authInfo: - Initiating post-auth configuration."];
-    [SFSDKWebViewStateManager resetSessionCookie];
-    
-    // If there's an original URL, load it through frontdoor.
-    if (originalUrl != nil) {
-        [SFSDKHybridLogger d:[self class] format:@"Authentication complete. Redirecting to '%@' through frontdoor.", [originalUrl stringByURLEncoding]];
-        BOOL createAbsUrl = YES;
-        if (authInfo.authType == SFOAuthTypeRefresh) {
-            createAbsUrl = NO;
+    [SFSDKWebViewStateManager resetSessionCookie:^(BOOL success) {
+        if (originalUrl != nil) {
+            [SFSDKHybridLogger d:[self class] format:@"Authentication complete. Redirecting to '%@' through frontdoor.", [originalUrl stringByURLEncoding]];
+            BOOL createAbsUrl = YES;
+            if (authInfo.authType == SFOAuthTypeRefresh) {
+                createAbsUrl = NO;
+            }
+            NSURL *returnUrlAfterAuth = [self frontDoorUrlWithReturnUrl:originalUrl returnUrlIsEncoded:YES createAbsUrl:createAbsUrl];
+            NSURLRequest *newRequest = [NSURLRequest requestWithURL:returnUrlAfterAuth];
+            [(WKWebView *)(self.webView) loadRequest:newRequest];
         }
-        NSURL *returnUrlAfterAuth = [self frontDoorUrlWithReturnUrl:originalUrl returnUrlIsEncoded:YES createAbsUrl:createAbsUrl];
-        NSURLRequest *newRequest = [NSURLRequest requestWithURL:returnUrlAfterAuth];
-        [(WKWebView *)(self.webView) loadRequest:newRequest];
-    }
+        
+        if (completion) {
+            completion(success);
+        }
+    }];
 }
 
 - (void)loadVFPingPage

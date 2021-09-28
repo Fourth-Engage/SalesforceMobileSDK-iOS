@@ -27,12 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class WKProcessPool;
 
-@interface SFSDKWebViewStateManager : NSObject
-
-/**
-  Reset some associated state with WKWebView e.g. Remove Cookies then add SID cookie
- */
-+ (void)resetSessionWithNewAccessToken:(NSString *)accessToken isSecureProtocol:(BOOL)isSecure;
+@interface SFSDKWebViewStateManager: NSObject<NSURLSessionDelegate>
 
 /**
   Remove all associated state with WKWebView e.g. Remove Cookies, reset WKProcessPool
@@ -49,7 +44,13 @@ NS_ASSUME_NONNULL_BEGIN
  Clears session cookie data from the cookie store, and sets a new session cookie based on the
  OAuth credentials.
  */
-+ (void)resetSessionCookie;
++ (void)resetSessionCookie:(nullable void (^)(BOOL success))completion;
+
++ (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
+                     willPerformHTTPRedirection:(NSHTTPURLResponse *)response
+                                     newRequest:(NSURLRequest *)request
+                              completionHandler:(void (^)(NSURLRequest * _Nullable))completionHandler;
+
 @end
 
 NS_ASSUME_NONNULL_END
