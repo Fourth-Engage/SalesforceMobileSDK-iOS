@@ -113,7 +113,7 @@ static WKProcessPool *_processPool = nil;
     NSURLSessionDataTask *getDataTask = [urlSession dataTaskWithURL:[NSURL URLWithString:cookieRefreshUrl] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
         if (error) {
-            NSLog(@"SF set cookies error: %@", [error localizedDescription]);
+            NSLog(@"Fourth:resetSessionCookie error: %@", [error localizedDescription]);
             
             if (completion) {
                 completion(false);
@@ -150,22 +150,56 @@ static WKProcessPool *_processPool = nil;
             return;
         }
         
-        dispatch_group_t cookiesGroup = dispatch_group_create();
-        
-        for (NSHTTPCookie *cookie in [NSHTTPCookie cookiesWithResponseHeaderFields:headers forURL:url]) {
-            if (@available(iOS 11.0, *)) {
-                dispatch_group_async(cookiesGroup, dispatch_get_main_queue(), ^{
+        if (@available(iOS 11.0, *)) {
+            __block BOOL hasOldCookies = NO;
+            NSMutableArray<NSHTTPCookie *> * oldCookeiesToDelete = [NSMutableArray new];
+            dispatch_group_t findOldCookiesGroup = dispatch_group_create();
+            for (NSHTTPCookie *cookie in [NSHTTPCookie cookiesWithResponseHeaderFields:headers forURL:url]) {
+                dispatch_group_async(findOldCookiesGroup, dispatch_get_main_queue(), ^{
                     WKHTTPCookieStore *webviewCookiesStore = [[WKWebsiteDataStore defaultDataStore] httpCookieStore];
                     
-                    dispatch_group_enter(cookiesGroup);
-                    [webviewCookiesStore setCookie:cookie completionHandler:^{
-                        dispatch_group_leave(cookiesGroup);
+                    dispatch_group_enter(findOldCookiesGroup);
+                    [webviewCookiesStore getAllCookies:^(NSArray<NSHTTPCookie *> *allCookies) {
+                        for (NSHTTPCookie *oldCookie in allCookies) {
+                            if ([cookie.name isEqualToString:oldCookie.name]) {
+                                 [oldCookeiesToDelete addObject:oldCookie];
+                                 hasOldCookies = YES;
+                            }
+                        }
+                        dispatch_group_leave(findOldCookiesGroup);
                     }];
                 });
             }
+            dispatch_group_wait(findOldCookiesGroup, DISPATCH_TIME_FOREVER);
+            
+            if (hasOldCookies == YES) {
+                dispatch_group_t deleteOldCookiesGroup = dispatch_group_create();
+                dispatch_group_async(deleteOldCookiesGroup, dispatch_get_main_queue(), ^{
+                    for (NSHTTPCookie *oldCookie in oldCookeiesToDelete) {
+                        WKHTTPCookieStore *webviewCookiesStore = [[WKWebsiteDataStore defaultDataStore] httpCookieStore];
+                        
+                        dispatch_group_enter(deleteOldCookiesGroup);
+                        [webviewCookiesStore deleteCookie:oldCookie completionHandler:^{
+                            dispatch_group_leave(deleteOldCookiesGroup);
+                        }];
+                    }
+                });
+                dispatch_group_wait(deleteOldCookiesGroup, DISPATCH_TIME_FOREVER);
+            }
+            
+            dispatch_group_t setCookiesGroup = dispatch_group_create();
+            for (NSHTTPCookie *cookie in [NSHTTPCookie cookiesWithResponseHeaderFields:headers forURL:url]) {
+                dispatch_group_async(setCookiesGroup, dispatch_get_main_queue(), ^{
+                    WKHTTPCookieStore *webviewCookiesStore = [[WKWebsiteDataStore defaultDataStore] httpCookieStore];
+                    
+                    dispatch_group_enter(setCookiesGroup);
+                    [webviewCookiesStore setCookie:cookie completionHandler:^{
+                        dispatch_group_leave(setCookiesGroup);
+                    }];
+                });
+            }
+            dispatch_group_wait(setCookiesGroup, DISPATCH_TIME_FOREVER);
         }
-        
-        dispatch_group_wait(cookiesGroup, DISPATCH_TIME_FOREVER);
         
         if (completion) {
             completion(true);
