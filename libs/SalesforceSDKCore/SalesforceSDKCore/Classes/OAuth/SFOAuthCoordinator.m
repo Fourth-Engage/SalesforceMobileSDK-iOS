@@ -1111,7 +1111,7 @@ static NSString * const kSFECParameter = @"ec";
     
     NSURL *requestUrl = [webView URL];
     NSString *errorUrlString = [NSString stringWithFormat:@"%@://%@%@", [requestUrl scheme], [requestUrl host], [requestUrl relativePath]];
-    if (-999 == error.code) {
+    if (-999 == error.code || 102 == error.code) {
         // -999 errors (operation couldn't be completed) occur during normal execution, therefore only log for debugging
         [SFSDKCoreLogger d:[self class] format:@"SFOAuthCoordinator:didFailLoadWithError: error code: %ld, description: %@, URL: %@", (long)error.code, [error localizedDescription], errorUrlString];
     } else {
