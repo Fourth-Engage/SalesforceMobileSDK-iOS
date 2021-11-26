@@ -28,7 +28,7 @@
 #import "CDVCommandDelegateImpl.h"
 #import <Foundation/NSCharacterSet.h>
 #import "CDVLoadingViewService.h"
-#import <SalesforceSDKCore/SFUserAccountManager.h>
+//#import "CDVWebViewEngineProtocol"
 
 @interface CDVViewController () {
     NSInteger _userAgentLockToken;

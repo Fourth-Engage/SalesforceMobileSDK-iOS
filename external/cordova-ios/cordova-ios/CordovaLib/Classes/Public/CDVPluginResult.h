@@ -19,7 +19,8 @@
 
 #import <Foundation/Foundation.h>
 #import "CDVAvailability.h"
-
+#ifndef CDVPluginResult_h
+#define CDVPluginResult_h
 typedef enum {
     CDVCommandStatus_NO_RESULT = 0,
     CDVCommandStatus_OK,
@@ -64,3 +65,4 @@ typedef enum {
 - (NSString*)argumentsAsJSON;
 
 @end
+#endif

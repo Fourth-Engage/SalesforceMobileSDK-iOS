@@ -19,11 +19,14 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "CDVPluginResult.h"
+
 #import "NSMutableArray+QueueAdditions.h"
 #import "CDVCommandDelegate.h"
 #import "CDVWebViewEngineProtocol.h"
+#import "CDVPluginResult.h"
 
+#ifndef CDVPlugin_h
+#define CDVPlugin_h
 @interface UIView (org_apache_cordova_UIView_Extension)
 
 @property (nonatomic, weak) UIScrollView* scrollView;
@@ -83,3 +86,4 @@ extern NSString* const CDVRemoteNotificationError CDV_DEPRECATED(4.0, "Functiona
 - (id)appDelegate;
 
 @end
+#endif

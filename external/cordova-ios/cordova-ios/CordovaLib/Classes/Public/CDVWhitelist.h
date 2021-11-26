@@ -20,7 +20,8 @@
 #import <Foundation/Foundation.h>
 
 extern NSString* const kCDVDefaultWhitelistRejectionString;
-
+#ifndef CDVWhitelist_h
+#define CDVWhitelist_h
 @interface CDVWhitelist : NSObject
 
 @property (nonatomic, copy) NSString* whitelistRejectionFormatString;
@@ -32,3 +33,4 @@ extern NSString* const kCDVDefaultWhitelistRejectionString;
 - (NSString*)errorStringForURL:(NSURL*)url;
 
 @end
+#endif

@@ -19,7 +19,8 @@
 
 #import "CDVAvailability.h"
 #import "CDVInvokedUrlCommand.h"
-
+#ifndef CDVCommandDelegate_h
+#define CDVCommandDelegate_h
 @class CDVPlugin;
 @class CDVPluginResult;
 @class CDVWhitelist;
@@ -49,3 +50,4 @@ typedef NSURL* (^ UrlTransformerBlock)(NSURL*);
 - (NSString*)userAgent;
 
 @end
+#endif

@@ -18,7 +18,8 @@
  */
 
 #import <Foundation/Foundation.h>
-
+#ifndef CDVInvokedUrlCommand_h
+#define CDVInvokedUrlCommand_h
 @interface CDVInvokedUrlCommand : NSObject {
     NSString* _callbackId;
     NSString* _className;
@@ -50,3 +51,4 @@
 - (id)argumentAtIndex:(NSUInteger)index withDefault:(id)defaultValue andClass:(Class)aClass;
 
 @end
+#endif

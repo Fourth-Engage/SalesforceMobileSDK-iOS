@@ -24,6 +24,8 @@
 #define kCDVWebViewEngineWKUIDelegate @"kCDVWebViewEngineWKUIDelegate"
 #define kCDVWebViewEngineWebViewPreferences @"kCDVWebViewEngineWebViewPreferences"
 
+#ifndef CDVWebViewEngineProtocol_h
+#define CDVWebViewEngineProtocol_h
 @protocol CDVWebViewEngineProtocol <NSObject>
 
 @property (nonatomic, strong, readonly) UIView* engineWebView;
@@ -39,3 +41,4 @@
 - (void)updateWithInfo:(NSDictionary*)info;
 
 @end
+#endif
