@@ -327,9 +327,9 @@
         // Fix the memory leak caused by the strong reference.
         [weakSelf setLockToken:lockToken];
         if (appURL) {
-            UIView *loadingView = CDVLoadingViewService.sharedInstance.view;
-            loadingView.frame = self.webView.bounds;
-            [self.webView addSubview:loadingView];
+//            UIView *loadingView = CDVLoadingViewService.sharedInstance.view;
+//            loadingView.frame = self.webView.bounds;
+//            [self.webView addSubview:loadingView];
             
             NSURLRequest* appReq = [NSURLRequest requestWithURL:appURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20.0];
             [self.webViewEngine loadRequest:appReq];
