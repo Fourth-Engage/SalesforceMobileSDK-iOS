@@ -100,12 +100,12 @@ static NSString * const kAppFeatureKey   = @"feature";
     NSString *prodAppVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     NSString *buildNumber = [[NSBundle mainBundle] infoDictionary][(NSString*)kCFBundleVersionKey];
     NSString *appVersion = [NSString stringWithFormat:@"%@(%@)", prodAppVersion, buildNumber];
-    NSDictionary *bootConfig = ((SFHybridViewController *)self.viewController).hybridViewConfig.configDict;
+//    NSDictionary *bootConfig = ((SFHybridViewController *)self.viewController).hybridViewConfig.configDict;
     NSDictionary *sdkInfo = @{kSDKVersionKey: SALESFORCE_SDK_VERSION,
                               kAppNameKey: appName,
                               kAppVersionKey: appVersion,
                               kForcePluginsAvailableKey: self.forcePlugins,
-                              kBootConfigKey: bootConfig};
+                              };//kBootConfigKey: bootConfig
     [self writeSuccessDictToJsRealm:sdkInfo callbackId:callbackId];
 }
 
