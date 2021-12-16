@@ -25,7 +25,7 @@
 {
     self = [super init];
     if (self) {
-        UIView *loadingView = [[[NSBundle mainBundle] loadNibNamed:@"LoadingView" owner:self options:nil] firstObject];
+        UILoadingView *loadingView = (UILoadingView *) [[[NSBundle mainBundle] loadNibNamed:@"LoadingView" owner:self options:nil] firstObject];
         loadingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
         self.view = loadingView;
