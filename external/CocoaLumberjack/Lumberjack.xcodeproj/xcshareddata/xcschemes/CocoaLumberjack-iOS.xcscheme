@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "19FF46011B8B4CF400B43179"
-               BuildableName = "CocoaLumberjack.framework"
+               BuildableName = "CocoaLumberjack-iOS.framework"
                BlueprintName = "CocoaLumberjack-iOS"
                ReferencedContainer = "container:Lumberjack.xcodeproj">
             </BuildableReference>
@@ -29,8 +29,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -46,13 +44,11 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "19FF46011B8B4CF400B43179"
-            BuildableName = "CocoaLumberjack.framework"
+            BuildableName = "CocoaLumberjack-iOS.framework"
             BlueprintName = "CocoaLumberjack-iOS"
             ReferencedContainer = "container:Lumberjack.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -64,7 +60,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "19FF46011B8B4CF400B43179"
-            BuildableName = "CocoaLumberjack.framework"
+            BuildableName = "CocoaLumberjack-iOS.framework"
             BlueprintName = "CocoaLumberjack-iOS"
             ReferencedContainer = "container:Lumberjack.xcodeproj">
          </BuildableReference>
