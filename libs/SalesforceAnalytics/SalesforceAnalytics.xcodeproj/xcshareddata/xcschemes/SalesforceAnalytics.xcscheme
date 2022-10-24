@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0720"
+   LastUpgradeVersion = "1400"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "18F3BF5E1A81DD2E00692297"
-               BuildableName = "iOSSwiftTest.app"
-               BlueprintName = "iOSSwiftTest"
-               ReferencedContainer = "container:Lumberjack.xcodeproj">
+               BlueprintIdentifier = "CE2B8BCE1CE900F500C6FC6A"
+               BuildableName = "SalesforceAnalytics.framework"
+               BlueprintName = "SalesforceAnalytics"
+               ReferencedContainer = "container:SalesforceAnalytics.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -29,17 +29,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "18F3BF5E1A81DD2E00692297"
-            BuildableName = "iOSSwiftTest.app"
-            BlueprintName = "iOSSwiftTest"
-            ReferencedContainer = "container:Lumberjack.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -51,18 +40,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "18F3BF5E1A81DD2E00692297"
-            BuildableName = "iOSSwiftTest.app"
-            BlueprintName = "iOSSwiftTest"
-            ReferencedContainer = "container:Lumberjack.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -70,16 +47,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "18F3BF5E1A81DD2E00692297"
-            BuildableName = "iOSSwiftTest.app"
-            BlueprintName = "iOSSwiftTest"
-            ReferencedContainer = "container:Lumberjack.xcodeproj">
+            BlueprintIdentifier = "CE2B8BCE1CE900F500C6FC6A"
+            BuildableName = "SalesforceAnalytics.framework"
+            BlueprintName = "SalesforceAnalytics"
+            ReferencedContainer = "container:SalesforceAnalytics.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

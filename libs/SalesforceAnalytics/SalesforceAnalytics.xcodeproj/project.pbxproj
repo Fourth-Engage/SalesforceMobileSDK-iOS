@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		3AD80D8E290691E30015C959 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE57B2C71EE9EA5E006F560B /* CocoaLumberjack.framework */; };
+		3AD80D8F290691E30015C959 /* CocoaLumberjack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CE57B2C71EE9EA5E006F560B /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CE2B8BD31CE900F500C6FC6A /* SalesforceAnalytics.h in Headers */ = {isa = PBXBuildFile; fileRef = CE2B8BD21CE900F500C6FC6A /* SalesforceAnalytics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE2B8C2E1CE9218900C6FC6A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2B8C2D1CE9218900C6FC6A /* main.m */; };
 		CE2B8C311CE9218900C6FC6A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2B8C301CE9218900C6FC6A /* AppDelegate.m */; };
@@ -55,7 +57,6 @@
 		CE47129C1F04257600D9E059 /* SFSDKAnalyticsLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = CE47129A1F04257600D9E059 /* SFSDKAnalyticsLogger.m */; };
 		CE4712AB1F04263100D9E059 /* SFSDKAnalyticsLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4712991F04257600D9E059 /* SFSDKAnalyticsLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE4712AC1F04263A00D9E059 /* SFSDKAnalyticsLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = CE47129A1F04257600D9E059 /* SFSDKAnalyticsLogger.m */; };
-		CE57B2E41EE9EA97006F560B /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE57B2C31EE9EA5E006F560B /* CocoaLumberjack.framework */; };
 		CE57B2EC1EE9EC64006F560B /* SFSDKFileLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = CE57B2E81EE9EC64006F560B /* SFSDKFileLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE57B2ED1EE9EC64006F560B /* SFSDKFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = CE57B2E91EE9EC64006F560B /* SFSDKFileLogger.m */; };
 		CE57B2EF1EE9EC64006F560B /* SFSDKLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = CE57B2EA1EE9EC64006F560B /* SFSDKLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -120,13 +121,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = CE2B8C291CE9218900C6FC6A;
 			remoteInfo = SalesforceAnalyticsTestApp;
-		};
-		CE57B2C21EE9EA5E006F560B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CE57B2AF1EE9EA5D006F560B /* Lumberjack.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DCB3185114EB418E001CFBEE;
-			remoteInfo = CocoaLumberjack;
 		};
 		CE57B2C41EE9EA5E006F560B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -250,6 +244,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		3AD80D90290691E30015C959 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3AD80D8F290691E30015C959 /* CocoaLumberjack.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE2B8C481CE921E000C6FC6A /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -336,8 +341,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE57B2E41EE9EA97006F560B /* CocoaLumberjack.framework in Frameworks */,
 				CEF371B01D0E582C0004A237 /* UIKit.framework in Frameworks */,
+				3AD80D8E290691E30015C959 /* CocoaLumberjack.framework in Frameworks */,
 				CEF371AF1D0E58260004A237 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -509,7 +514,6 @@
 		CE57B2B01EE9EA5D006F560B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CE57B2C31EE9EA5E006F560B /* CocoaLumberjack.framework */,
 				CE57B2C51EE9EA5E006F560B /* CocoaLumberjackSwift.framework */,
 				CE57B2C71EE9EA5E006F560B /* CocoaLumberjack.framework */,
 				CE57B2C91EE9EA5E006F560B /* CocoaLumberjackSwift.framework */,
@@ -659,6 +663,7 @@
 				CE2B8BCC1CE900F500C6FC6A /* Headers */,
 				CE2B8BF91CE91AAC00C6FC6A /* ShellScript */,
 				CE2B8BFA1CE91AC700C6FC6A /* ShellScript */,
+				3AD80D90290691E30015C959 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -762,6 +767,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -786,13 +792,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		CE57B2C31EE9EA5E006F560B /* CocoaLumberjack.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = CocoaLumberjack.framework;
-			remoteRef = CE57B2C21EE9EA5E006F560B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		CE57B2C51EE9EA5E006F560B /* CocoaLumberjackSwift.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1115,6 +1114,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PROJECT_NAME)/Supporting Files/$(PROJECT_NAME)-Prefix.pch";
 				INFOPLIST_FILE = "SalesforceAnalytics/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1263,6 +1263,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PROJECT_NAME)/Supporting Files/$(PROJECT_NAME)-Prefix.pch";
 				INFOPLIST_FILE = "SalesforceAnalytics/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1418,6 +1419,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PROJECT_NAME)/Supporting Files/$(PROJECT_NAME)-Prefix.pch";
 				INFOPLIST_FILE = "SalesforceAnalytics/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1567,6 +1569,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PROJECT_NAME)/Supporting Files/$(PROJECT_NAME)-Prefix.pch";
 				INFOPLIST_FILE = "SalesforceAnalytics/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1722,6 +1725,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PROJECT_NAME)/Supporting Files/$(PROJECT_NAME)-Prefix.pch";
 				INFOPLIST_FILE = "SalesforceAnalytics/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1878,6 +1882,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PROJECT_NAME)/Supporting Files/$(PROJECT_NAME)-Prefix.pch";
 				INFOPLIST_FILE = "SalesforceAnalytics/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -2086,6 +2091,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PROJECT_NAME)/Supporting Files/$(PROJECT_NAME)-Prefix.pch";
 				INFOPLIST_FILE = "SalesforceAnalytics/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -2110,6 +2116,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PROJECT_NAME)/Supporting Files/$(PROJECT_NAME)-Prefix.pch";
 				INFOPLIST_FILE = "SalesforceAnalytics/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
